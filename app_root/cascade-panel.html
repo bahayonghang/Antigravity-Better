@@ -17,6 +17,13 @@
       --fontsize-code-block: 13px;
       --fontsize-action-status: 13px;
       --fontsize-thinking: 13px;
+      /* 字体族变量 */
+      --fontfamily-user-message: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --fontfamily-ai-response: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --fontfamily-code-block: 'Consolas', 'Monaco', 'Courier New', monospace;
+      --fontfamily-action-status: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --fontfamily-thinking: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --fontfamily-input-bar: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       --bg-modal: #1e1e1e;
       --border-color: #3c3c3c;
       --accent-color: #667eea;
@@ -523,6 +530,53 @@
       font-size: var(--fontsize-thinking) !important;
     }
 
+    /* ===== 字体族覆盖样式 ===== */
+    /* 用户消息字体族 */
+    #react-app.fontfamily-user-message .bg-gray-500\/15 .whitespace-pre-wrap,
+    #react-app.fontfamily-user-message .bg-gray-500\/15 [style*="word-break"] {
+      font-family: var(--fontfamily-user-message) !important;
+    }
+
+    /* AI 回复字体族 */
+    #react-app.fontfamily-ai-response .prose:not(.opacity-70) p,
+    #react-app.fontfamily-ai-response .prose:not(.opacity-70) li,
+    #react-app.fontfamily-ai-response .prose:not(.opacity-70) h2,
+    #react-app.fontfamily-ai-response .prose:not(.opacity-70) h3,
+    #react-app.fontfamily-ai-response .prose:not(.opacity-70) strong,
+    #react-app.fontfamily-ai-response .prose:not(.opacity-70) ul,
+    #react-app.fontfamily-ai-response .prose:not(.opacity-70) ol,
+    #react-app.fontfamily-ai-response .prose:not(.opacity-70) table,
+    #react-app.fontfamily-ai-response .prose:not(.opacity-70) th,
+    #react-app.fontfamily-ai-response .prose:not(.opacity-70) td {
+      font-family: var(--fontfamily-ai-response) !important;
+    }
+
+    /* 代码块字体族 */
+    #react-app.fontfamily-code-block pre,
+    #react-app.fontfamily-code-block pre code,
+    #react-app.fontfamily-code-block .code-block,
+    #react-app.fontfamily-code-block .code-line {
+      font-family: var(--fontfamily-code-block) !important;
+    }
+
+    /* 操作状态字体族 */
+    #react-app.fontfamily-action-status .shrink-0:is(:contains('Analyzed'), :contains('Created'), :contains('Edited')),
+    #react-app.fontfamily-action-status [class*="animate-fade-in"] .truncate {
+      font-family: var(--fontfamily-action-status) !important;
+    }
+
+    /* 思考过程字体族 */
+    #react-app.fontfamily-thinking .opacity-70.prose,
+    #react-app.fontfamily-thinking .opacity-70.prose * {
+      font-family: var(--fontfamily-thinking) !important;
+    }
+
+    /* 输入栏字体族 */
+    #react-app.fontfamily-input-bar div[contenteditable="true"][data-lexical-editor="true"],
+    #react-app.fontfamily-input-bar div[contenteditable="true"][data-lexical-editor="true"] * {
+      font-family: var(--fontfamily-input-bar) !important;
+    }
+
     /* ===== 复制按钮样式 ===== */
     .copy-btn {
       position: absolute;
@@ -801,6 +855,22 @@
     }
 
     .fontsize-input:focus {
+      border-color: var(--accent-color);
+    }
+
+    /* 字体族输入框 */
+    .fontfamily-input {
+      width: 128px;
+      background: #2d2d2d;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 4px 6px;
+      color: #ccc;
+      font-size: 11px;
+      outline: none;
+    }
+
+    .fontfamily-input:focus {
       border-color: var(--accent-color);
     }
 
@@ -1144,6 +1214,118 @@
             </div>
           </div>
 
+          <!-- Accordion: Font Family -->
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <span class="accordion-title" data-i18n="fontfamily_title">🔠 字体样式</span>
+              <span class="accordion-icon">▼</span>
+            </div>
+            <div class="accordion-body">
+              <div class="accordion-inner">
+                <div class="main-toggle">
+                  <span class="main-toggle-label" data-i18n="enable_custom_fontfamily">启用自定义字体样式</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="fontfamily-master-toggle">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div id="fontfamily-settings">
+                  <div class="setting-item">
+                    <div class="setting-left">
+                      <span class="setting-icon">📝</span>
+                      <span class="setting-name" data-i18n="lbl_user_msg">用户消息</span>
+                    </div>
+                    <div class="setting-right">
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-fontfamily-user-message" checked>
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <input type="text" id="fontfamily-user-message" class="fontfamily-input"
+                        value="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                      <button id="fontfamily-sync-btn" class="sync-btn" data-i18n="btn_sync">同步全部</button>
+                    </div>
+                  </div>
+
+                  <div class="setting-item">
+                    <div class="setting-left">
+                      <span class="setting-icon">🤖</span>
+                      <span class="setting-name" data-i18n="lbl_ai_resp">AI回复</span>
+                    </div>
+                    <div class="setting-right">
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-fontfamily-ai-response" checked>
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <input type="text" id="fontfamily-ai-response" class="fontfamily-input"
+                        value="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                    </div>
+                  </div>
+
+                  <div class="setting-item">
+                    <div class="setting-left">
+                      <span class="setting-icon">💻</span>
+                      <span class="setting-name" data-i18n="lbl_code">代码块</span>
+                    </div>
+                    <div class="setting-right">
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-fontfamily-code-block" checked>
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <input type="text" id="fontfamily-code-block" class="fontfamily-input"
+                        value="'Consolas', 'Monaco', 'Courier New', monospace">
+                    </div>
+                  </div>
+
+                  <div class="setting-item">
+                    <div class="setting-left">
+                      <span class="setting-icon">✅</span>
+                      <span class="setting-name" data-i18n="lbl_status">操作状态</span>
+                    </div>
+                    <div class="setting-right">
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-fontfamily-action-status">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <input type="text" id="fontfamily-action-status" class="fontfamily-input"
+                        value="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                    </div>
+                  </div>
+
+                  <div class="setting-item">
+                    <div class="setting-left">
+                      <span class="setting-icon">💭</span>
+                      <span class="setting-name" data-i18n="lbl_thinking">思考过程</span>
+                    </div>
+                    <div class="setting-right">
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-fontfamily-thinking">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <input type="text" id="fontfamily-thinking" class="fontfamily-input"
+                        value="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                    </div>
+                  </div>
+
+                  <div class="setting-item">
+                    <div class="setting-left">
+                      <span class="setting-icon">⌨️</span>
+                      <span class="setting-name" data-i18n="lbl_input_bar">输入栏</span>
+                    </div>
+                    <div class="setting-right">
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-fontfamily-input-bar" checked>
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <input type="text" id="fontfamily-input-bar" class="fontfamily-input"
+                        value="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Accordion: LaTeX -->
           <div class="accordion-item">
             <div class="accordion-header">
@@ -1382,8 +1564,11 @@
         lbl_code: '代码块',
         lbl_status: '操作状态',
         lbl_thinking: '思考过程',
+        lbl_input_bar: '输入栏',
         fontsize_title: '🔤 字体大小',
         enable_custom_fontsize: '启用自定义字体大小',
+        fontfamily_title: '🔠 字体样式',
+        enable_custom_fontfamily: '启用自定义字体样式',
         btn_sync: '同步全部',
         update_available: '新版本可用',
         btn_download: '下载更新',
@@ -1430,8 +1615,11 @@
         lbl_code: 'Code Block',
         lbl_status: 'Action Status',
         lbl_thinking: 'Thinking Process',
+        lbl_input_bar: 'Input Bar',
         fontsize_title: '🔤 Font Size',
         enable_custom_fontsize: 'Enable Custom Font Size',
+        fontfamily_title: '🔠 Font Family',
+        enable_custom_fontfamily: 'Enable Custom Font Family',
         btn_sync: 'Sync All',
         update_available: 'New version available',
         btn_download: 'Download',
@@ -1566,6 +1754,16 @@
       { id: 'thinking', cssVar: '--fontsize-thinking', cssClass: 'fontsize-thinking', default: 13, enabled: false },
     ];
 
+    // 字体族配置
+    const FONTFAMILY_CONFIGS = [
+      { id: 'user-message', cssVar: '--fontfamily-user-message', cssClass: 'fontfamily-user-message', default: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", enabled: true },
+      { id: 'ai-response', cssVar: '--fontfamily-ai-response', cssClass: 'fontfamily-ai-response', default: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", enabled: true },
+      { id: 'code-block', cssVar: '--fontfamily-code-block', cssClass: 'fontfamily-code-block', default: "'Consolas', 'Monaco', 'Courier New', monospace", enabled: true },
+      { id: 'action-status', cssVar: '--fontfamily-action-status', cssClass: 'fontfamily-action-status', default: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", enabled: false },
+      { id: 'thinking', cssVar: '--fontfamily-thinking', cssClass: 'fontfamily-thinking', default: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", enabled: false },
+      { id: 'input-bar', cssVar: '--fontfamily-input-bar', cssClass: 'fontfamily-input-bar', default: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", enabled: true },
+    ];
+
     // 复制配置
     const COPY_CONFIGS = [
       { id: 'copy-user', selector: '.bg-gray-500\\/15', textSelector: '.whitespace-pre-wrap', type: 'user' },
@@ -1614,6 +1812,9 @@
       // 字体大小设置
       fontsizeMasterEnabled: false,
       fontsizes: FONTSIZE_CONFIGS.reduce((acc, c) => { acc[c.id] = { size: c.default, enabled: c.enabled }; return acc; }, {}),
+      // 字体族设置
+      fontfamilyMasterEnabled: false,
+      fontfamilies: FONTFAMILY_CONFIGS.reduce((acc, c) => { acc[c.id] = { family: c.default, enabled: c.enabled }; return acc; }, {}),
       copyEnabled: false,
       copy: COPY_CONFIGS.reduce((acc, c) => { acc[c.id] = { enabled: true }; return acc; }, {}),
       hotkeyEnabled: false,
@@ -1641,6 +1842,8 @@
             colors: { ...defaultSettings.colors, ...parsed.colors },
             fontsizeMasterEnabled: parsed.fontsizeMasterEnabled ?? defaultSettings.fontsizeMasterEnabled,
             fontsizes: { ...defaultSettings.fontsizes, ...parsed.fontsizes },
+            fontfamilyMasterEnabled: parsed.fontfamilyMasterEnabled ?? defaultSettings.fontfamilyMasterEnabled,
+            fontfamilies: { ...defaultSettings.fontfamilies, ...parsed.fontfamilies },
             copyEnabled: parsed.copyEnabled ?? defaultSettings.copyEnabled,
             copy: { ...defaultSettings.copy, ...parsed.copy },
             hotkeyEnabled: parsed.hotkeyEnabled ?? defaultSettings.hotkeyEnabled,
@@ -1676,6 +1879,7 @@
     const copyMasterToggle = document.getElementById('copy-master-toggle');
     const hotkeyMasterToggle = document.getElementById('hotkey-master-toggle');
     const fontsizeMasterToggle = document.getElementById('fontsize-master-toggle');
+    const fontfamilyMasterToggle = document.getElementById('fontfamily-master-toggle');
     const sendHotkeySelect = document.getElementById('send-hotkey-select');
     const reactApp = document.getElementById('react-app');
 
@@ -1838,6 +2042,64 @@
       saveSettings(currentSettings);
       applyFontsizeSettings();
     });
+
+    // A3. 字体族功能
+    function applyFontfamilySettings() {
+      FONTFAMILY_CONFIGS.forEach(config => {
+        const fontSetting = currentSettings.fontfamilies[config.id];
+        const familyValue = (fontSetting?.family || '').trim() || config.default;
+        document.documentElement.style.setProperty(config.cssVar, familyValue);
+        if (currentSettings.fontfamilyMasterEnabled && fontSetting.enabled) {
+          reactApp.classList.add(config.cssClass);
+        } else {
+          reactApp.classList.remove(config.cssClass);
+        }
+      });
+    }
+
+    if (fontfamilyMasterToggle) {
+      fontfamilyMasterToggle.addEventListener('change', () => {
+        currentSettings.fontfamilyMasterEnabled = fontfamilyMasterToggle.checked;
+        saveSettings(currentSettings);
+        applyFontfamilySettings();
+      });
+    }
+
+    FONTFAMILY_CONFIGS.forEach(config => {
+      const toggleEl = document.getElementById(`toggle-fontfamily-${config.id}`);
+      const familyEl = document.getElementById(`fontfamily-${config.id}`);
+
+      if (toggleEl) {
+        toggleEl.addEventListener('change', () => {
+          currentSettings.fontfamilies[config.id].enabled = toggleEl.checked;
+          saveSettings(currentSettings);
+          applyFontfamilySettings();
+        });
+      }
+
+      if (familyEl) {
+        familyEl.addEventListener('input', () => {
+          const val = familyEl.value.trim();
+          currentSettings.fontfamilies[config.id].family = val || config.default;
+          saveSettings(currentSettings);
+          applyFontfamilySettings();
+        });
+      }
+    });
+
+    const fontfamilySyncBtn = document.getElementById('fontfamily-sync-btn');
+    if (fontfamilySyncBtn) {
+      fontfamilySyncBtn.addEventListener('click', () => {
+        const baseFamily = (currentSettings.fontfamilies['user-message'].family || '').trim() || FONTFAMILY_CONFIGS[0].default;
+        FONTFAMILY_CONFIGS.forEach(config => {
+          currentSettings.fontfamilies[config.id].family = baseFamily;
+          const familyEl = document.getElementById(`fontfamily-${config.id}`);
+          if (familyEl) familyEl.value = baseFamily;
+        });
+        saveSettings(currentSettings);
+        applyFontfamilySettings();
+      });
+    }
 
     // B. 复制功能
     let copyObserver = null;
@@ -2444,6 +2706,17 @@
         if (sizeEl) sizeEl.value = currentSettings.fontsizes[c.id].size;
       });
 
+      // 字体族控件初始化
+      if (fontfamilyMasterToggle) {
+        fontfamilyMasterToggle.checked = currentSettings.fontfamilyMasterEnabled;
+      }
+      FONTFAMILY_CONFIGS.forEach(c => {
+        const t = document.getElementById(`toggle-fontfamily-${c.id}`);
+        const familyEl = document.getElementById(`fontfamily-${c.id}`);
+        if (t) t.checked = currentSettings.fontfamilies[c.id].enabled;
+        if (familyEl) familyEl.value = currentSettings.fontfamilies[c.id].family;
+      });
+
       // 2. 自动操作初始化
       if (autoAcceptMasterToggle) {
         autoAcceptMasterToggle.checked = currentSettings.autoAcceptEnabled;
@@ -2457,6 +2730,7 @@
       // 3. 应用功能
       applyColorSettings();
       applyFontsizeSettings();
+      applyFontfamilySettings();
       applyCopySettings();
       applyHotkeySettings();
       applyAutoAcceptSettings();
