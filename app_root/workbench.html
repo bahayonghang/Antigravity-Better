@@ -95,6 +95,11 @@
 			--fontsize-code-block: 13px;
 			--fontsize-action-status: 13px;
 			--fontsize-thinking: 13px;
+			--fontfamily-user-message: inherit;
+			--fontfamily-ai-response: inherit;
+			--fontfamily-code-block: inherit;
+			--fontfamily-action-status: inherit;
+			--fontfamily-thinking: inherit;
 			--bg-modal: #1e1e1e;
 			--border-color: #3c3c3c;
 			--accent-color: #667eea;
@@ -185,6 +190,8 @@
 		.ab-fontsize-input:focus { border-color:var(--accent-color) !important; outline:none !important; }
 		.ab-fontsize-input::-webkit-inner-spin-button { opacity:0; height:24px; cursor:pointer; transition:opacity .2s; }
 		.ab-fontsize-input:focus::-webkit-inner-spin-button { opacity:1; }
+		.ab-fontfamily-input { width:120px !important; background:#2d2d2d !important; border:1px solid var(--border-color) !important; border-radius:6px !important; padding:2px 6px !important; color:#ccc !important; font-size:12px !important; outline:none !important; height:28px !important; box-sizing:border-box; }
+		.ab-fontfamily-input:focus { border-color:var(--accent-color) !important; outline:none !important; }
 
 		/* 按钮组 */
 		.ab-btn-group { display:flex; gap:10px; margin-top:10px; }
@@ -268,6 +275,28 @@
 		body.fontsize-thinking .antigravity-agent-side-panel .leading-relaxed.select-text.opacity-70,
 		body.fontsize-thinking .antigravity-agent-side-panel .leading-relaxed.select-text.opacity-70 * { font-size:var(--fontsize-thinking) !important; }
 
+		/* ===== 字体族覆盖 (V0.2 选择器) ===== */
+		body.fontfamily-user-message .antigravity-agent-side-panel .bg-gray-500\/15 .whitespace-pre-wrap,
+		body.fontfamily-user-message .antigravity-agent-side-panel .bg-gray-500\/15 [style*="word-break"] { font-family:var(--fontfamily-user-message) !important; }
+
+		body.fontfamily-ai-response .antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) p,
+		body.fontfamily-ai-response .antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li,
+		body.fontfamily-ai-response .antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) h2,
+		body.fontfamily-ai-response .antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) h3,
+		body.fontfamily-ai-response .antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) strong,
+		body.fontfamily-ai-response .antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) ul,
+		body.fontfamily-ai-response .antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) ol,
+		body.fontfamily-ai-response .antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) table,
+		body.fontfamily-ai-response .antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) th,
+		body.fontfamily-ai-response .antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) td { font-family:var(--fontfamily-ai-response) !important; }
+
+		body.fontfamily-code-block .antigravity-agent-side-panel .leading-relaxed pre,
+		body.fontfamily-code-block .antigravity-agent-side-panel .leading-relaxed pre code,
+		body.fontfamily-code-block .antigravity-agent-side-panel .leading-relaxed pre span { font-family:var(--fontfamily-code-block) !important; }
+
+		body.fontfamily-thinking .antigravity-agent-side-panel .leading-relaxed.select-text.opacity-70,
+		body.fontfamily-thinking .antigravity-agent-side-panel .leading-relaxed.select-text.opacity-70 * { font-family:var(--fontfamily-thinking) !important; }
+
 		/* ===== 复制按钮 ===== */
 		.copy-btn { position:absolute; top:6px; right:26px; width:26px; height:26px; background:rgba(60,60,60,.9); border:1px solid rgba(255,255,255,.1); border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:0; transition:all .2s ease; z-index:10; }
 		.copy-btn svg { width:14px; height:14px; fill:#ccc; }
@@ -317,6 +346,7 @@
 			colors_title: '🎨 颜色自定义', enable_custom_colors: '启用自定义颜色',
 			lbl_user_msg: '用户消息', lbl_ai_resp: 'AI回复', lbl_code: '代码块', lbl_status: '操作状态', lbl_thinking: '思考过程',
 			fontsize_title: '🔤 字体大小', enable_custom_fontsize: '启用自定义字体大小', btn_sync: '同步全部',
+			fontfamily_title: '🔤 字体样式', enable_custom_fontfamily: '启用自定义字体样式',
 			copy_title: '📋 一键复制', enable_copy: '启用复制按钮',
 			hotkey_title: '⌨️ 快捷键设置', enable_hotkey: '自定义发送快捷键', lbl_send_hotkey: '发送快捷键',
 			auto_accept_title: '🤖 自动操作', enable_auto_accept: '启用自动操作', auto_accept_desc: '选择要自动点击的按钮类型',
@@ -333,6 +363,7 @@
 			colors_title: '🎨 Colors', enable_custom_colors: 'Enable Custom Colors',
 			lbl_user_msg: 'User Message', lbl_ai_resp: 'AI Response', lbl_code: 'Code Block', lbl_status: 'Action Status', lbl_thinking: 'Thinking Process',
 			fontsize_title: '🔤 Font Size', enable_custom_fontsize: 'Enable Custom Font Size', btn_sync: 'Sync All',
+			fontfamily_title: '🔤 Font Family', enable_custom_fontfamily: 'Enable Custom Font Family',
 			copy_title: '📋 One-Click Copy', enable_copy: 'Enable Copy Buttons',
 			hotkey_title: '⌨️ Shortcuts', enable_hotkey: 'Custom Send Hotkey', lbl_send_hotkey: 'Send Hotkey',
 			auto_accept_title: '🤖 Auto Accept', enable_auto_accept: 'Enable Auto Accept', auto_accept_desc: 'Select button types to auto-click',
@@ -365,6 +396,14 @@
 		{ id: 'code-block', cssVar: '--fontsize-code-block', cssClass: 'fontsize-code-block', default: 13, enabled: true, icon: '💻' },
 		{ id: 'action-status', cssVar: '--fontsize-action-status', cssClass: 'fontsize-action-status', default: 13, enabled: false, icon: '✅' },
 		{ id: 'thinking', cssVar: '--fontsize-thinking', cssClass: 'fontsize-thinking', default: 13, enabled: false, icon: '💭' },
+	];
+
+	const FONTFAMILY_CONFIGS = [
+		{ id: 'user-message', cssVar: '--fontfamily-user-message', cssClass: 'fontfamily-user-message', default: 'inherit', enabled: false, icon: '📝' },
+		{ id: 'ai-response', cssVar: '--fontfamily-ai-response', cssClass: 'fontfamily-ai-response', default: 'inherit', enabled: false, icon: '🤖' },
+		{ id: 'code-block', cssVar: '--fontfamily-code-block', cssClass: 'fontfamily-code-block', default: 'inherit', enabled: false, icon: '💻' },
+		{ id: 'action-status', cssVar: '--fontfamily-action-status', cssClass: 'fontfamily-action-status', default: 'inherit', enabled: false, icon: '✅' },
+		{ id: 'thinking', cssVar: '--fontfamily-thinking', cssClass: 'fontfamily-thinking', default: 'inherit', enabled: false, icon: '💭' },
 	];
 
 	// V0.2 复制配置：选择器已适配
@@ -406,6 +445,8 @@
 		autoAcceptPatterns: AUTO_ACCEPT_CONFIGS.reduce((acc, c) => { acc[c.id] = c.defaultEnabled; return acc; }, {}),
 		bannedCommands: [...DEFAULT_BANNED_COMMANDS],
 		autoAcceptStats: { clicks: 0, blocked: 0, verified: 0 },
+		fontfamilyMasterEnabled: false,
+		fontfamilies: FONTFAMILY_CONFIGS.reduce((acc, c) => { acc[c.id] = { family: c.default, enabled: c.enabled }; return acc; }, {}),
 		autoUpdateEnabled: true, latexEnabled: false,
 	};
 
@@ -418,6 +459,7 @@
 				return { ...defaultSettings, ...p,
 					colors: { ...defaultSettings.colors, ...p.colors },
 					fontsizes: { ...defaultSettings.fontsizes, ...p.fontsizes },
+					fontfamilies: { ...defaultSettings.fontfamilies, ...p.fontfamilies },
 					copy: { ...defaultSettings.copy, ...p.copy },
 					autoAcceptPatterns: { ...defaultSettings.autoAcceptPatterns, ...p.autoAcceptPatterns },
 					autoAcceptStats: { ...defaultSettings.autoAcceptStats, ...p.autoAcceptStats },
@@ -443,6 +485,14 @@
 			const s = currentSettings.fontsizes[c.id];
 			document.documentElement.style.setProperty(c.cssVar, s.size + 'px');
 			document.body.classList.toggle(c.cssClass, currentSettings.fontsizeMasterEnabled && s.enabled);
+		});
+	}
+
+	function applyFontfamilySettings() {
+		FONTFAMILY_CONFIGS.forEach(c => {
+			const s = currentSettings.fontfamilies[c.id];
+			document.documentElement.style.setProperty(c.cssVar, s.family);
+			document.body.classList.toggle(c.cssClass, currentSettings.fontfamilyMasterEnabled && s.enabled);
 		});
 	}
 
@@ -603,6 +653,33 @@
 			fontAcc.inner.appendChild(row);
 		});
 		tabAppearance.appendChild(fontAcc.item);
+
+		// -- 字体样式 --
+		const ffAcc = createAccordion('fontfamily_title', false);
+		ffAcc.inner.appendChild(createMainToggle('enable_custom_fontfamily', currentSettings.fontfamilyMasterEnabled, (v) => {
+			currentSettings.fontfamilyMasterEnabled = v; saveSettings(currentSettings); applyFontfamilySettings();
+		}));
+		FONTFAMILY_CONFIGS.forEach((c, idx) => {
+			const s = currentSettings.fontfamilies[c.id];
+			const lbl = c.id === 'user-message' ? 'lbl_user_msg' : c.id === 'ai-response' ? 'lbl_ai_resp' : c.id === 'code-block' ? 'lbl_code' : c.id === 'action-status' ? 'lbl_status' : 'lbl_thinking';
+			const { row, right } = createSettingItem(c.icon, lbl);
+			right.appendChild(createToggle(s.enabled, (v) => { currentSettings.fontfamilies[c.id].enabled = v; saveSettings(currentSettings); applyFontfamilySettings(); }));
+			const fi = document.createElement('input'); fi.type = 'text'; fi.className = 'ab-fontfamily-input'; fi.value = s.family === 'inherit' ? '' : s.family; fi.placeholder = 'inherit';
+			fi.addEventListener('change', () => { currentSettings.fontfamilies[c.id].family = fi.value.trim() || 'inherit'; saveSettings(currentSettings); applyFontfamilySettings(); });
+			right.appendChild(fi);
+			if (idx === 0) {
+				const syncBtn = el('button', 'ab-sync-btn', t('btn_sync')); syncBtn.dataset.i18n = 'btn_sync';
+				syncBtn.addEventListener('click', () => {
+					const val = fi.value.trim() || 'inherit';
+					FONTFAMILY_CONFIGS.forEach(fc => { currentSettings.fontfamilies[fc.id].family = val; });
+					saveSettings(currentSettings); applyFontfamilySettings();
+					ffAcc.inner.querySelectorAll('.ab-fontfamily-input').forEach(inp => inp.value = val === 'inherit' ? '' : val);
+				});
+				right.appendChild(syncBtn);
+			}
+			ffAcc.inner.appendChild(row);
+		});
+		tabAppearance.appendChild(ffAcc.item);
 
 		// -- LaTeX --
 		const latexAcc = createAccordion('latex_title', false);
@@ -835,12 +912,16 @@
 
 	// ===== 自动操作功能 =====
 	let autoAcceptObserver = null;
+	const clickedButtons = new WeakSet(); // 记录已点击的按钮，防止重复点击
 	function isAutoAcceptButton(btn) {
+		// 检查是否已点击过此按钮
+		if (clickedButtons.has(btn)) return false;
 		const text = (btn.textContent || '').trim().toLowerCase();
 		if (!text || text.length > 50) return false;
 		const patterns = Object.entries(currentSettings.autoAcceptPatterns).filter(([_, v]) => v).map(([k]) => k);
 		if (!patterns.length) return false;
-		const rejects = ['skip', 'reject', 'cancel', 'close', 'refine', 'dismiss'];
+		// 添加 'always' 到拒绝列表，防止无限循环点击 "Always run" 等按钮
+		const rejects = ['skip', 'reject', 'cancel', 'close', 'refine', 'dismiss', 'always'];
 		if (rejects.some(r => text.includes(r))) return false;
 		if (!patterns.some(p => text.includes(p))) return false;
 		const style = window.getComputedStyle(btn); const rect = btn.getBoundingClientRect();
@@ -869,6 +950,8 @@
 			if (!isAutoAcceptButton(btn)) continue;
 			const text = (btn.textContent || '').trim().toLowerCase();
 			if (/run|execute/i.test(text)) { const nearby = findNearbyCommandText(btn); if (isCommandBanned(nearby)) { if (scope._abUpdateStats) scope._abUpdateStats({ blocked: 1 }); continue; } }
+			// 记录已点击的按钮，防止重复点击
+			clickedButtons.add(btn);
 			btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 			if (scope._abUpdateStats) scope._abUpdateStats({ clicks: 1 });
 			await new Promise(r => setTimeout(r, 100));
@@ -1078,7 +1161,7 @@
 	function onPanelReady(panelEl) {
 		console.log('[AB] ✅ AI 面板已检测到');
 		createSettingsUI(panelEl);
-		applyColorSettings(); applyFontsizeSettings();
+		applyColorSettings(); applyFontsizeSettings(); applyFontfamilySettings();
 		applyCopySettings(panelEl); applyHotkeySettings();
 		applyAutoAcceptSettings(panelEl);
 		if (currentSettings.latexEnabled) applyLatexSettings(panelEl);
@@ -1093,7 +1176,7 @@
 	}
 	function init() {
 		console.log('[AB] 开始初始化...');
-		try { applyColorSettings(); applyFontsizeSettings(); waitForAgentPanel(); console.log('[AB] ✅ 初始化完成'); } catch (e) { console.error('[AB] ❌ 初始化失败:', e); }
+		try { applyColorSettings(); applyFontsizeSettings(); applyFontfamilySettings(); waitForAgentPanel(); console.log('[AB] ✅ 初始化完成'); } catch (e) { console.error('[AB] ❌ 初始化失败:', e); }
 	}
 	if (document.body) { setTimeout(init, 1000); } else { document.addEventListener('DOMContentLoaded', () => setTimeout(init, 1000)); }
 })();
