@@ -1050,10 +1050,13 @@
 		const rejects = ['skip', 'reject', 'cancel', 'close', 'refine', 'dismiss', 'always', 'history', 'conversation'];
 		if (rejects.some(r => text.includes(r))) return false;
 
-		// 🐱 清理辅助说明文本，如快捷键后缀 "run (⌘ enter)" -> "run"
-		const cleanText = text.replace(/\s*\([^)]+\)$/, '').trim();
-		// 🐱 严格匹配：防止匹配到包含关键词的历史对话项目（如 "run script"），导致 UI 跳转回历史记录
-		const isMatch = patterns.some(p => cleanText === p || cleanText === p + ' all');
+		// 🐱 采用包容性更强的起步匹配逻辑
+		const isMatch = patterns.some(p => {
+			// 匹配规则：必须以 pattern (如 "run", "apply") 开头，后面紧跟单词边界或非字母字符
+			// 这样可以匹配 "run", "run alt+enter", "run command"，但不会匹配 "runner" 
+			const regex = new RegExp(`^${p}(?:\\b|\\W|$)`, 'i');
+			return regex.test(text);
+		});
 		if (!isMatch) return false;
 
 		const style = window.getComputedStyle(btn); const rect = btn.getBoundingClientRect();
