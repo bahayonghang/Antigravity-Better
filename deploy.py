@@ -15,8 +15,9 @@ from pathlib import Path
 # 源文件相对路径（相对于脚本目录）
 SOURCE_RELATIVE_PATH = "app_root/workbench.html"
 
-# 目标目录搜索规则：在 Program Files 下查找 Antigravity
+# 目标目录搜索规则：查找 Antigravity 安装目录
 TARGET_SEARCH_PATHS = [
+    Path(os.environ.get("LOCALAPPDATA", "")) / "Programs" / "Antigravity" / "resources" / "app" / "out" / "vs" / "code" / "electron-browser" / "workbench",
     Path(os.environ.get("ProgramFiles", "C:\\Program Files")) / "Antigravity" / "resources" / "app" / "out" / "vs" / "code" / "electron-browser" / "workbench",
     Path(os.environ.get("ProgramFiles(x86)", "C:\\Program Files (x86)")) / "Antigravity" / "resources" / "app" / "out" / "vs" / "code" / "electron-browser" / "workbench",
     Path("D:\\Program Files") / "Antigravity" / "resources" / "app" / "out" / "vs" / "code" / "electron-browser" / "workbench",
