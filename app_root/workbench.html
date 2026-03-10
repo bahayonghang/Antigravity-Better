@@ -978,89 +978,18 @@
 
 	// ===== 自动操作功能 =====
 	let autoAcceptObserver = null;
-	const clickedButtons = new WeakSet(); // 记录已点击的按钮，防止重复点击
-	const recentAutoAcceptSignatures = new Map(); // 短时签名去重，防止重渲染后重复点击
-	const AUTO_ACCEPT_SIGNATURE_TTL = 2500;
-	const AUTO_ACCEPT_ROUND_CLICK_LIMIT = 3;
-	function pruneRecentAutoAcceptSignatures(now = Date.now()) {
-		recentAutoAcceptSignatures.forEach((ts, key) => { if (now - ts > AUTO_ACCEPT_SIGNATURE_TTL) recentAutoAcceptSignatures.delete(key); });
-	}
-	function buildAutoAcceptSignature(btn) {
-		const text = ((btn.textContent || '').trim().toLowerCase()).replace(/\s*\([^)]+\)$/, '').trim();
-		const nearby = findNearbyCommandText(btn).slice(0, 120);
-		const host = btn.closest('pre, code, .leading-relaxed.select-text, [data-message-id], article, li, .group') || btn.parentElement;
-		const classKey = host && host.className ? host.className.toString().split(/\s+/).slice(0, 3).join('.') : '';
-		const hostKey = host ? `${host.tagName}:${classKey}` : 'none';
-		return `${text}|${nearby}|${hostKey}`;
-	}
-	function isButtonInAutoAcceptActionArea(btn, panelEl) {
-		if (!panelEl || !panelEl.contains(btn)) return false;
-		// 排除设置面板 / 导航 / 历史列表等非执行区
-		if (btn.closest('#ab-overlay, [id^="ab-"], .ab-settings, .ab-settings-panel, .ab-settings-row')) return false;
-		if (btn.closest('nav, aside, [role="navigation"], [class*="history"], [class*="sidebar"], [class*="setting"], [class*="menu-list"]')) return false;
-		const ariaLabel = (btn.getAttribute('aria-label') || '').toLowerCase();
-		if (/(history|conversation|sidebar|navigation|setting)/.test(ariaLabel)) return false;
-		// 排除菜单触发器与下拉层中的按钮
-		if (btn.closest('.lexical-typeahead-menu, [role="menu"], [aria-haspopup="menu"]')) return false;
-		const actionContainer = btn.closest('[class*="action"], [class*="toolbar"], [class*="footer"], [class*="controls"], [data-testid*="action"]');
-		const messageRegion = btn.closest('.leading-relaxed.select-text, [data-message-id], article, li');
-		const nearbyCommand = findNearbyCommandText(btn);
-		return !!(actionContainer || messageRegion || nearbyCommand);
-	}
-	function collectButtonsFromNode(node, outSet) {
-		if (!node || !outSet) return;
-		if (node.nodeType !== 1) return;
-		const el = node;
-		if (el.tagName === 'BUTTON') outSet.add(el);
-		el.querySelectorAll('button').forEach(btn => outSet.add(btn));
-	}
-	function collectFallbackAutoAcceptButtons(scope) {
-		const set = new Set();
-		const proseNodes = Array.from(scope.querySelectorAll('.leading-relaxed.select-text:not(.opacity-70)')).slice(-6);
-		proseNodes.forEach(prose => {
-			const localRoot = prose.closest('div') || prose.parentElement;
-			if (localRoot) localRoot.querySelectorAll('button').forEach(btn => set.add(btn));
-		});
-		Array.from(scope.querySelectorAll('[class*="action"], [class*="toolbar"], [class*="footer"], [class*="controls"]')).slice(-8).forEach(root => {
-			root.querySelectorAll('button').forEach(btn => set.add(btn));
-		});
-		return Array.from(set);
-	}
-	function normalizeAutoAcceptCandidates(scope, candidateButtons) {
-		const set = new Set();
-		if (candidateButtons && typeof candidateButtons[Symbol.iterator] === 'function') {
-			for (const btn of candidateButtons) {
-				if (btn && btn.tagName === 'BUTTON' && scope.contains(btn)) set.add(btn);
-			}
-		}
-		if (!set.size) return collectFallbackAutoAcceptButtons(scope);
-		return Array.from(set);
-	}
-	function isAutoAcceptButton(btn, panelEl) {
-		// 检查是否已点击过此按钮
-		if (clickedButtons.has(btn)) return false;
+	function isAutoAcceptButton(btn) {
 		const text = (btn.textContent || '').trim().toLowerCase();
 		if (!text || text.length > 50) return false;
 		// 排除下拉菜单触发器（如 "Always run" 按钮）
 		if (btn.hasAttribute('aria-haspopup')) return false;
-		if (!isButtonInAutoAcceptActionArea(btn, panelEl)) return false;
 		const patterns = Object.entries(currentSettings.autoAcceptPatterns).filter(([_, v]) => v).map(([k]) => k);
 		if (!patterns.length) return false;
-		// 添加拒绝列表，防止无限循环点击与误触非执行按钮
-		const rejects = ['skip', 'reject', 'cancel', 'close', 'refine', 'dismiss', 'always', 'history', 'conversation'];
+		const rejects = ['skip', 'reject', 'cancel', 'close', 'refine', 'dismiss', 'always'];
 		if (rejects.some(r => text.includes(r))) return false;
-
-		// 🐱 采用包容性更强的起步匹配逻辑
-		const isMatch = patterns.some(p => {
-			// 匹配规则：必须以 pattern (如 "run", "apply") 开头，后面紧跟单词边界或非字母字符
-			// 这样可以匹配 "run", "run alt+enter", "run command"，但不会匹配 "runner" 
-			const regex = new RegExp(`^${p}(?:\\b|\\W|$)`, 'i');
-			return regex.test(text);
-		});
-		if (!isMatch) return false;
-
+		if (!patterns.some(p => text.includes(p))) return false;
 		const style = window.getComputedStyle(btn); const rect = btn.getBoundingClientRect();
-		return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0 && !btn.disabled;
+		return style.display !== 'none' && rect.width > 0 && !btn.disabled;
 	}
 	function findNearbyCommandText(btnEl) {
 		let cmd = ''; let container = btnEl.parentElement; let depth = 0;
@@ -1076,30 +1005,20 @@
 		const list = currentSettings.bannedCommands || [];
 		return list.some(p => p && text.toLowerCase().includes(p.toLowerCase()));
 	}
-	async function performAutoAccept(panelEl, candidateButtons) {
+	async function performAutoAccept(panelEl) {
 		if (!currentSettings.autoAcceptEnabled) return;
 		// 非无限模式下，剩余次数为0则停止
 		if (!currentSettings.autoAcceptUnlimited && currentSettings.autoAcceptRemaining <= 0) return;
 		const scope = panelEl || document.querySelector('.antigravity-agent-side-panel');
 		if (!scope) return;
-		pruneRecentAutoAcceptSignatures();
-		const buttons = normalizeAutoAcceptCandidates(scope, candidateButtons);
-		if (!buttons.length) return;
-		let roundClicks = 0;
+		const buttons = scope.querySelectorAll('button');
 		for (const btn of buttons) {
 			if (!currentSettings.autoAcceptUnlimited && currentSettings.autoAcceptRemaining <= 0) break;
-			if (roundClicks >= AUTO_ACCEPT_ROUND_CLICK_LIMIT) break;
-			if (!isAutoAcceptButton(btn, scope)) continue;
-			const signature = buildAutoAcceptSignature(btn);
-			if (recentAutoAcceptSignatures.has(signature)) continue;
+			if (!isAutoAcceptButton(btn)) continue;
 			const text = (btn.textContent || '').trim().toLowerCase();
 			if (/run|execute/i.test(text)) { const nearby = findNearbyCommandText(btn); if (isCommandBanned(nearby)) { if (scope._abUpdateStats) scope._abUpdateStats({ blocked: 1 }); continue; } }
-			// 记录已点击的按钮与短时签名，防止重复点击
-			clickedButtons.add(btn);
-			recentAutoAcceptSignatures.set(signature, Date.now());
 			btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 			if (scope._abUpdateStats) scope._abUpdateStats({ clicks: 1 });
-			roundClicks++;
 			await new Promise(r => setTimeout(r, 100));
 		}
 	}
@@ -1108,18 +1027,9 @@
 		if (!currentSettings.autoAcceptEnabled) return;
 		const scope = panelEl || document.querySelector('.antigravity-agent-side-panel');
 		if (!scope) return;
-		const pendingButtons = new Set();
-		autoAcceptObserver = new MutationObserver(mutations => {
-			mutations.forEach(m => m.addedNodes.forEach(node => collectButtonsFromNode(node, pendingButtons)));
-			clearTimeout(window._abAATimer);
-			window._abAATimer = setTimeout(() => {
-				const candidates = Array.from(pendingButtons);
-				pendingButtons.clear();
-				performAutoAccept(panelEl, candidates);
-			}, 350);
-		});
+		autoAcceptObserver = new MutationObserver(() => { clearTimeout(window._abAATimer); window._abAATimer = setTimeout(() => performAutoAccept(panelEl), 500); });
 		autoAcceptObserver.observe(scope, { childList: true, subtree: true });
-		performAutoAccept(panelEl, []);
+		performAutoAccept(panelEl);
 	}
 
 	// ===== LaTeX 渲染 =====
