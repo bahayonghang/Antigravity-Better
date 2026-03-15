@@ -106,6 +106,18 @@ You can freely customize this HTML file to build your own features. Following ou
 
 > ⚠️ **Note**: Every time Antigravity updates, it will overwrite the HTML file. You'll need to re-apply this replacement after each update.
 
+### 🛠️ Troubleshooting (Mac OS)
+
+If you encounter a **"File is damaged and should be moved to the Trash"** warning on Mac OS (especially in **v1.20.5**), follow these steps:
+
+1. Click **Cancel** to keep the file.
+2. Go to **System Settings** -> **Privacy & Security** -> **Security**.
+3. You should see a message saying "Antigravity was blocked...". Click **Allow Anyway** or **Open Anyway**.
+4. Open Antigravity again. When the dialog appears, select **Open** (you may need to **right-click** the app and select **Open** instead of using double-click).
+5. This only needs to be done once to grant permission.
+
+*Note: We have only tested this on macOS. Other platforms might encounter similar issues; please look for system-specific security permission solutions.*
+
 ---
 
 ## 🛠️ Customization

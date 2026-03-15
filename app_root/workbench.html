@@ -316,6 +316,9 @@
 		.latex-error { color:#f87171; font-size:12px; background:rgba(248,113,113,.1); padding:2px 6px; border-radius:3px; font-family:monospace; }
 		.latex-code-rendered { padding:16px; text-align:center; overflow-x:auto; }
 		.latex-code-rendered .katex { font-size:1.1em; }
+		/* v0.2.2-patch: 行内公式样式 */
+		.latex-inline { display:inline; }
+		.latex-inline .katex { font-size:1em; }
 	</style>
 </head>
 
@@ -1066,17 +1069,60 @@
 			}).catch(e => { katexLoading = false; reject(new Error('KaTeX fetch failed: ' + e.message)); });
 		});
 	}
-	// 渲染单个元素 (p/li) 中的内联/块级 LaTeX
-	function processLatexInElement(elem) {
+	// 渲染单个元素 (p/li/td/th/h1-h6) 中的内联/块级 LaTeX
+	// v0.2.2-patch: 增强正则，支持 \(...\) / \[...\] 格式，扩展元素选择器
+	// 统一的 LaTeX 匹配模式（$...$, $$...$$, \(...\), \[...\]）
+	const LATEX_PATTERN = /(\$\$[\s\S]+?\$\$|\$(?!\$)(?:[^$\n]|\n(?!\n))+?\$(?!\$)|\\\[[\s\S]+?\\\]|\\\((?:[^\\]|\\(?!\)))+?\\\))/g;
+
+	// v0.2.2-patch: 修复 markdown 渲染器将 LaTeX 下标 _ 误解析为 <em>/<strong> 的问题
+	// 当公式 $\mathcal{L}_{\text{total}}$ 中的 _ 被 markdown 当作斜体标记时，
+	// DOM 中 $...$ 的内容会被 <em> 标签拆分，导致正则无法在单个文本节点中完整匹配。
+	// 解决方案：在处理前，检测并解包位于 $...$ 公式内部的 <em>/<strong> 元素。
+	function normalizeLatexInElement(elem) {
 		const text = elem.textContent;
-		const pattern = /(\$\$[\s\S]+?\$\$|\$(?!\$)(?:[^$\n]|\n(?!\n))+?\$(?!\$))/g;
-		if (!pattern.test(text)) return false; pattern.lastIndex = 0;
-		// 对于包含 $$ 的块级公式段落，整段替换
-		const blockPattern = /^\s*\$\$([\s\S]+?)\$\$\s*$/;
+		LATEX_PATTERN.lastIndex = 0;
+		if (!LATEX_PATTERN.test(text)) return;
+		// 没有行内格式化元素则无需处理
+		const fmtEls = elem.querySelectorAll('em, strong, i, b');
+		if (fmtEls.length === 0) return;
+		let changed = false;
+		fmtEls.forEach(fmt => {
+			if (fmt.closest('pre, .latex-rendered')) return;
+			// 通过计算此元素之前的 $ 符号数量来判断是否处于公式内部
+			let dollars = 0;
+			const tw = document.createTreeWalker(elem, NodeFilter.SHOW_TEXT);
+			let nd;
+			while (nd = tw.nextNode()) {
+				// 判断此文本节点是否在 fmt 元素之前
+				if (fmt.compareDocumentPosition(nd) & Node.DOCUMENT_POSITION_PRECEDING) {
+					dollars += (nd.textContent.match(/\$/g) || []).length;
+				}
+			}
+			// 奇数个 $ → 此格式化元素位于公式 $...$ 内部
+			if (dollars % 2 === 1) {
+				const delim = (fmt.tagName === 'EM' || fmt.tagName === 'I') ? '_' : '**';
+				const tn = document.createTextNode(delim + fmt.textContent + delim);
+				fmt.parentNode.replaceChild(tn, fmt);
+				changed = true;
+			}
+		});
+		if (changed) elem.normalize(); // 合并相邻文本节点
+	}
+
+	function processLatexInElement(elem) {
+		if (elem.dataset.latexElemProcessed) return false;
+		// v0.2.2-patch: 先修复被 markdown 破坏的 LaTeX 公式
+		normalizeLatexInElement(elem);
+		const text = elem.textContent;
+		LATEX_PATTERN.lastIndex = 0;
+		if (!LATEX_PATTERN.test(text)) return false; LATEX_PATTERN.lastIndex = 0;
+		// 对于包含 $$ 或 \[...\] 的块级公式段落，整段替换
+		const blockPattern = /^\s*(?:\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\])\s*$/;
 		const blockMatch = text.match(blockPattern);
 		if (blockMatch) {
 			try {
-				const html = window.katex.renderToString(blockMatch[1].trim(), { throwOnError: false, displayMode: true });
+				const formula = (blockMatch[1] || blockMatch[2]).trim();
+				const html = window.katex.renderToString(formula, { throwOnError: false, displayMode: true });
 				const wrap = document.createElement('div');
 				wrap.className = 'latex-block latex-rendered';
 				wrap.dataset.latexOriginal = text;
@@ -1086,29 +1132,44 @@
 				return true;
 			} catch (e) { return false; }
 		}
+		// v0.2.2-patch: 先将包含纯 LaTeX 的 <code> 元素解包为文本节点
+		elem.querySelectorAll('code').forEach(code => {
+			if (code.closest('pre')) return; // 不处理 <pre> 内的 <code>
+			const ct = code.textContent;
+			LATEX_PATTERN.lastIndex = 0;
+			if (LATEX_PATTERN.test(ct) && ct.replace(LATEX_PATTERN, '').trim() === '') {
+				// 整个 <code> 内容都是 LaTeX 公式，解包
+				code.replaceWith(document.createTextNode(ct));
+			}
+		});
 		// 内联公式：逐个文本节点处理
 		const walker = document.createTreeWalker(elem, NodeFilter.SHOW_TEXT, null, false);
 		const nodes = []; let n;
 		while (n = walker.nextNode()) {
 			if (n.parentNode && /^(code|pre|script|style)$/i.test(n.parentNode.tagName)) continue;
 			if (n.parentNode && n.parentNode.classList && n.parentNode.classList.contains('latex-rendered')) continue;
-			if (n.textContent.includes('$')) nodes.push(n);
+			if (n.textContent.includes('$') || n.textContent.includes('\\(') || n.textContent.includes('\\[')) nodes.push(n);
 		}
 		let has = false;
 		for (let i = nodes.length - 1; i >= 0; i--) {
 			const textNode = nodes[i];
 			const nodeText = textNode.textContent;
-			const inlinePattern = /(\$\$[\s\S]+?\$\$|\$(?!\$)(?:[^$\n]|\n(?!\n))+?\$(?!\$))/g;
-			if (!inlinePattern.test(nodeText)) continue; inlinePattern.lastIndex = 0;
+			LATEX_PATTERN.lastIndex = 0;
+			if (!LATEX_PATTERN.test(nodeText)) continue; LATEX_PATTERN.lastIndex = 0;
 			const frag = document.createDocumentFragment(); let last = 0, m;
-			while ((m = inlinePattern.exec(nodeText)) !== null) {
+			while ((m = LATEX_PATTERN.exec(nodeText)) !== null) {
 				if (m.index > last) frag.appendChild(document.createTextNode(nodeText.slice(last, m.index)));
-				const full = m[0], isBlock = full.startsWith('$$');
-				const formula = isBlock ? full.slice(2, -2).trim() : full.slice(1, -1).trim();
+				const full = m[0];
+				const isBlock = full.startsWith('$$') || full.startsWith('\\[');
+				let formula;
+				if (full.startsWith('$$')) formula = full.slice(2, -2).trim();
+				else if (full.startsWith('\\[')) formula = full.slice(2, -2).trim();
+				else if (full.startsWith('\\(')) formula = full.slice(2, -2).trim();
+				else formula = full.slice(1, -1).trim();
 				try {
 					const html = window.katex.renderToString(formula, { throwOnError: false, displayMode: isBlock });
 					const wrap = document.createElement(isBlock ? 'div' : 'span');
-					wrap.className = isBlock ? 'latex-block latex-rendered' : 'latex-rendered';
+					wrap.className = isBlock ? 'latex-block latex-rendered' : 'latex-inline latex-rendered';
 					wrap.dataset.latexOriginal = full; safeSetHTML(wrap, html); frag.appendChild(wrap);
 				} catch (e) { frag.appendChild(document.createTextNode(full)); }
 				last = m.index + full.length;
@@ -1116,6 +1177,7 @@
 			if (last < nodeText.length) frag.appendChild(document.createTextNode(nodeText.slice(last)));
 			textNode.parentNode.replaceChild(frag, textNode); has = true;
 		}
+		if (has) elem.dataset.latexElemProcessed = 'true';
 		return has;
 	}
 	// 渲染 latex 代码块（语言标记为 "latex" 的 <pre> 元素）
@@ -1157,6 +1219,15 @@
 		if (!currentSettings.latexEnabled || !katexLoaded) return;
 		const scope = panelEl || document.querySelector('.antigravity-agent-side-panel');
 		if (!scope) return;
+		// v0.2.4: 扩展选择器，增加更多容器和元素类型（来自上游 LaTeX 行内公式修复）
+		const proseSelectors = [
+			'.leading-relaxed.select-text:not(.opacity-70)',  // 原始选择器
+			'.select-text.leading-relaxed:not(.opacity-70)',  // 备选顺序
+			'[class*="leading-relaxed"][class*="select-text"]:not([class*="opacity"])', // 模糊匹配
+		];
+		// v0.2.4: 扩展子元素选择器，增加 td, th, h1-h6 等
+		const elemSelector = 'p, li, td, th, h1, h2, h3, h4, h5, h6';
+		// 脏节点优化：仅处理变化的节点，避免全量扫描
 		const dirtyList = (dirtyNodes && typeof dirtyNodes[Symbol.iterator] === 'function') ? Array.from(dirtyNodes) : [];
 		const proseTargets = new Set();
 		const preTargets = new Set();
@@ -1164,14 +1235,22 @@
 			dirtyList.forEach(node => {
 				if (!node || node.nodeType !== 1 || !scope.contains(node)) return;
 				const el = node;
-				if (el.matches('.leading-relaxed.select-text:not(.opacity-70)')) proseTargets.add(el);
-				el.querySelectorAll('.leading-relaxed.select-text:not(.opacity-70)').forEach(p => proseTargets.add(p));
+				// 使用扩展选择器匹配 prose 容器
+				proseSelectors.forEach(sel => {
+					try {
+						if (el.matches(sel)) proseTargets.add(el);
+						el.querySelectorAll(sel).forEach(p => proseTargets.add(p));
+					} catch(e) {}
+				});
 				if (el.tagName === 'PRE') preTargets.add(el);
 				el.querySelectorAll('pre').forEach(pre => preTargets.add(pre));
 			});
 		}
 		if (!proseTargets.size && !preTargets.size) {
-			scope.querySelectorAll('.leading-relaxed.select-text:not(.opacity-70)').forEach(p => proseTargets.add(p));
+			// 无脏节点或脏节点中未找到目标，全量扫描
+			proseSelectors.forEach(sel => {
+				try { scope.querySelectorAll(sel).forEach(p => proseTargets.add(p)); } catch(e) {}
+			});
 			processLatexCodeBlocks(scope);
 		} else {
 			processLatexCodeBlocks(preTargets);
@@ -1179,11 +1258,19 @@
 		// 处理正文中的内联/块级 LaTeX
 		proseTargets.forEach(prose => {
 			if (!prose || prose.dataset.latexProcessed) return;
-			const elems = prose.querySelectorAll('p, li');
+			const elems = prose.querySelectorAll(elemSelector);
 			let has = false;
 			elems.forEach(elem => { if (processLatexInElement(elem)) has = true; });
 			if (has) prose.dataset.latexProcessed = 'true';
 		});
+		// v0.2.4: 兜底逻辑 - 未找到 prose 容器时直接搜索 scope
+		if (!proseTargets.size) {
+			console.log('[AB] ⚠️ LaTeX: 未找到 prose 容器，尝试直接搜索 scope 内元素');
+			scope.querySelectorAll(elemSelector).forEach(elem => {
+				if (elem.closest('#ab-overlay') || elem.closest('#ab-modal')) return;
+				processLatexInElement(elem);
+			});
+		}
 	}
 	function revertLatex(panelEl) {
 		const scope = panelEl || document.querySelector('.antigravity-agent-side-panel');
