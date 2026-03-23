@@ -31,6 +31,18 @@ TARGET_FILENAME = "workbench.html"
 BACKUP_SUFFIX = ".origin"
 
 
+def setup_console_output() -> None:
+    """调整命令行输出编码，避免 Windows 控制台因 emoji/中文崩溃。"""
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if not hasattr(stream, "reconfigure"):
+            continue
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, OSError, ValueError):
+            pass
+
+
 def find_script_dir() -> Path:
     """获取脚本所在目录"""
     return Path(__file__).parent.resolve()
@@ -159,6 +171,31 @@ def restore(target_dir: Path, dry_run: bool = False) -> tuple[bool, str]:
         return False, f"恢复失败：{e}"
 
 
+def redeploy(target_dir: Path, dry_run: bool = False) -> tuple[bool, str]:
+    """
+    强制重新部署
+
+    语义：
+    1. 若存在备份，先恢复原始 workbench.html
+    2. 再重新部署当前仓库中的 workbench.html
+    3. 不覆盖已有备份，避免污染 restore 基线
+    """
+    backup_file = target_dir / (TARGET_FILENAME + BACKUP_SUFFIX)
+
+    if backup_file.exists():
+        success, msg = restore(target_dir, dry_run)
+        if not success:
+            return False, f"重新部署失败（恢复阶段）：{msg}"
+    else:
+        print("ℹ️ 未找到备份文件，将直接执行部署。")
+
+    success, msg = deploy(target_dir, dry_run)
+    if not success:
+        return False, f"重新部署失败（部署阶段）：{msg}"
+
+    return True, "强制重新部署成功！重启 Antigravity 生效。"
+
+
 # ================== CLI 模式 ==================
 def run_cli():
     """命令行模式入口"""
@@ -168,14 +205,15 @@ def run_cli():
         epilog="""
 示例:
   python deploy.py deploy           # 自动查找并部署
+  python deploy.py redeploy         # 强制重新部署
   python deploy.py deploy -t "D:\\..."  # 指定目标目录
   python deploy.py restore          # 恢复原始文件
   python deploy.py --gui            # 启动图形界面
         """
     )
 
-    parser.add_argument("action", nargs="?", choices=["deploy", "restore", "status"],
-                        help="执行的操作：deploy=部署，restore=恢复，status=查看状态")
+    parser.add_argument("action", nargs="?", choices=["deploy", "redeploy", "restore", "status"],
+                        help="执行的操作：deploy=部署，redeploy=强制重新部署，restore=恢复，status=查看状态")
     parser.add_argument("-t", "--target", type=str, help="指定目标目录路径")
     parser.add_argument("-n", "--dry-run", action="store_true", help="仅模拟，不实际执行")
     parser.add_argument("--gui", action="store_true", help="启动图形界面")
@@ -204,6 +242,8 @@ def run_cli():
     # 执行操作
     if args.action == "deploy":
         success, msg = deploy(target_dir, args.dry_run)
+    elif args.action == "redeploy":
+        success, msg = redeploy(target_dir, args.dry_run)
     elif args.action == "restore":
         success, msg = restore(target_dir, args.dry_run)
     elif args.action == "status":
@@ -360,6 +400,7 @@ def run_gui():
 
 # ================== 主入口 ==================
 if __name__ == "__main__":
+    setup_console_output()
     # 无参数时启动 GUI，有参数时进入 CLI
     if len(sys.argv) == 1:
         run_gui()
