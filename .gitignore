@@ -4,3 +4,4 @@ anti-toolbox/node_modules
 .omc/
 *.bak
 ref/
+.omx/
