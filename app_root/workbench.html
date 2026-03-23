@@ -83,7 +83,7 @@
 	<link rel="stylesheet" href="../../../workbench/workbench.desktop.main.css">
 
 	<style>
-		/* ===== Antigravity Better v0.2.2 ===== */
+		/* ===== Antigravity Better v0.2.6 ===== */
 		:root {
 			--color-user-message: #60A5FA;
 			--color-ai-response: #E0E0E0;
@@ -108,10 +108,10 @@
 		}
 
 		/* 悬浮按钮 (absolute in side-panel) */
-		#ab-settings-btn { position:absolute; right:0; top:66%; transform:translateY(-50%); width:28px; height:48px; background:linear-gradient(135deg,#667eea,#764ba2); border:none; border-radius:8px 0 0 8px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:-2px 2px 8px rgba(0,0,0,.3); z-index:9999; transition:all .3s ease; }
-		#ab-settings-btn:hover { width:36px; background:linear-gradient(135deg,#764ba2,#667eea); }
-		#ab-settings-btn svg { width:18px; height:18px; fill:#fff; transition:transform .3s ease; }
-		#ab-settings-btn:hover svg { transform:rotate(90deg); }
+		#ab-settings-btn { position:absolute; right:10px; top:66%; transform:translateY(-50%); width:36px; height:36px; background:rgba(255,255,255,.08); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.12); border-radius:50%; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,.2); z-index:9999; transition:all .35s cubic-bezier(.34,1.56,.64,1); }
+		#ab-settings-btn:hover { background:rgba(102,126,234,.15); border-color:rgba(102,126,234,.4); box-shadow:0 0 20px rgba(102,126,234,.25),0 4px 16px rgba(0,0,0,.2); transform:translateY(-50%) scale(1.1); }
+		#ab-settings-btn svg { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:17px; height:17px; fill:rgba(255,255,255,.6); transition:all .4s ease; }
+		#ab-settings-btn:hover svg { fill:#a5b4fc; transform:translate(-50%,-50%) rotate(90deg); }
 
 		/* 遮罩层 (absolute in side-panel) */
 		#ab-overlay { position:absolute; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,.5); z-index:10000; display:none; opacity:0; transition:opacity .3s ease; align-items:center; justify-content:center; }
@@ -133,12 +133,12 @@
 		.ab-header-right { display:flex; align-items:center; gap:12px; }
 		.ab-lang-switch { background:none; border:1px solid var(--border-color); color:var(--text-sub); font-size:11px; padding:4px 8px; border-radius:4px; cursor:pointer; transition:all .2s; }
 		.ab-lang-switch:hover { border-color:var(--text-main); color:var(--text-main); }
-		.ab-close { background:none; border:none; color:var(--text-sub); font-size:20px; cursor:pointer; padding:0; line-height:1; transition:color .2s; }
-		.ab-close:hover { color:var(--text-main); }
+		.ab-close { background:none; border:none; color:var(--text-sub); font-size:18px; cursor:pointer; padding:6px; width:32px; height:32px; line-height:1; transition:all .2s; border-radius:6px; display:flex; align-items:center; justify-content:center; }
+		.ab-close:hover { color:var(--text-main); background:rgba(255,255,255,.1); }
 
 		/* Tab 导航 */
 		.ab-tab-nav { display:flex; border-bottom:1px solid var(--border-color); padding:0 10px; background:rgba(0,0,0,.1); }
-		.ab-tab-btn { flex:1; background:none; border:none; color:var(--text-sub); padding:12px 12px; min-height:42px; font-size:13px; cursor:pointer; position:relative; transition:all .2s; box-sizing:border-box; outline:none; }
+		.ab-tab-btn { flex:1; background:none; border:none; color:var(--text-sub); padding:12px 12px; min-height:42px; font-size:13px; cursor:pointer; position:relative; transition:all .2s; box-sizing:border-box; outline:none; display:flex; align-items:center; justify-content:center; gap:4px; }
 		.ab-tab-btn:hover { color:var(--text-main); }
 		.ab-tab-btn.active { color:var(--accent-color); font-weight:600; }
 		.ab-tab-btn.active::after { content:''; position:absolute; bottom:-1px; left:0; width:100%; height:2px; background:var(--accent-color); }
@@ -154,7 +154,7 @@
 		.ab-accordion-header { padding:14px 20px; background:rgba(255,255,255,.01); cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:background .2s; }
 		.ab-accordion-header:hover { background:rgba(255,255,255,.03); }
 		.ab-accordion-title { font-size:13px; font-weight:600; color:var(--text-main); display:flex; align-items:center; gap:8px; }
-		.ab-accordion-icon { font-size:10px; color:var(--text-sub); transition:transform .3s; }
+		.ab-accordion-icon { transition:transform .3s; }
 		.ab-accordion.expanded .ab-accordion-icon { transform:rotate(180deg); }
 		.ab-accordion-body { max-height:0; overflow:hidden; transition:max-height .3s cubic-bezier(0,1,0,1); background:rgba(0,0,0,.1); }
 		.ab-accordion.expanded .ab-accordion-body { max-height:1000px; transition:max-height .3s ease-in-out; }
@@ -166,7 +166,7 @@
 		.ab-setting { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.05); }
 		.ab-setting:last-child { border-bottom:none; }
 		.ab-setting-left { display:flex; align-items:center; gap:10px; }
-		.ab-setting-icon { font-size:15px; width:20px; text-align:center; color:var(--text-sub); line-height:28px; }
+		.ab-setting-icon { width:20px; color:var(--text-sub); }
 		.ab-setting-name { color:#ccc; font-size:13px; line-height:28px; }
 		.ab-setting-right { display:flex; align-items:center; gap:8px; }
 		.ab-setting-desc { font-size:11px; color:var(--text-sub); margin-bottom:12px; line-height:1.5; }
@@ -216,7 +216,7 @@
 		/* 统计面板 */
 		.ab-stats-panel { display:flex; justify-content:space-around; padding:12px; background:rgba(0,0,0,.2); border-radius:8px; margin-top:12px; }
 		.ab-stat-item { text-align:center; flex:1; }
-		.ab-stat-icon { font-size:16px; display:block; margin-bottom:4px; }
+		.ab-stat-icon { margin-bottom:4px; }
 		.ab-stat-value { display:block; font-size:18px; font-weight:700; color:var(--text-main); }
 		.ab-stat-label { font-size:10px; color:var(--text-sub); text-transform:uppercase; }
 
@@ -351,6 +351,19 @@
 		/* v0.2.2-patch: 行内公式样式 */
 		.latex-inline { display:inline; }
 		.latex-inline .katex { font-size:1em; }
+
+		/* ===== SVG 图标 ===== */
+		.ab-icon { width:16px; height:16px; fill:currentColor; flex-shrink:0; vertical-align:middle; }
+		.ab-icon-sm { width:14px; height:14px; }
+		.ab-icon-lg { width:18px; height:18px; }
+		.ab-setting-icon { display:flex; align-items:center; justify-content:center; }
+		.ab-setting-icon .ab-icon { color:var(--text-sub); }
+		.ab-accordion-title .ab-icon { color:var(--accent-color); }
+		.ab-tab-btn .ab-icon { margin-right:4px; }
+		.ab-stat-icon { display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
+		.ab-stat-icon .ab-icon { width:18px; height:18px; }
+		.ab-accordion-icon { display:flex; align-items:center; transition:transform .3s; }
+		.ab-accordion-icon .ab-icon { width:12px; height:12px; color:var(--text-sub); }
 	</style>
 </head>
 
@@ -365,8 +378,8 @@
 <script>
 (function () {
 	'use strict';
-	/* ===== Antigravity Better v0.2.2 ===== */
-	console.log('[AB] Antigravity Better v0.2.2 Loading...');
+	/* ===== Antigravity Better v0.2.6 ===== */
+	console.log('[AB] Antigravity Better v0.2.6 Loading...');
 
 	// ===== Trusted Types Policy =====
 	let abPolicy = null;
@@ -378,75 +391,107 @@
 	}
 	function safeSetHTML(el, html) { el.innerHTML = abPolicy ? abPolicy.createHTML(html) : html; }
 
+	// ===== SVG 图标字典 =====
+	const ICONS = {
+		appearance: 'M12,22C6.49,22,2,17.51,2,12S6.49,2,12,2s10,4.49,10,10S17.51,22,12,22z M12,4c-4.41,0-8,3.59-8,8s3.59,8,8,8s8-3.59,8-8S16.41,4,12,4z M15.5,17c-0.83,0-1.5-0.67-1.5-1.5S14.67,14,15.5,14s1.5,0.67,1.5,1.5S16.33,17,15.5,17z M12,17c-0.83,0-1.5-0.67-1.5-1.5S11.17,14,12,14s1.5,0.67,1.5,1.5S12.83,17,12,17z M8.5,17c-0.83,0-1.5-0.67-1.5-1.5S7.67,14,8.5,14s1.5,0.67,1.5,1.5S9.33,17,8.5,17z M15.5,11c-0.83,0-1.5-0.67-1.5-1.5S14.67,8,15.5,8s1.5,0.67,1.5,1.5S16.33,11,15.5,11z M12,11c-0.83,0-1.5-0.67-1.5-1.5S11.17,8,12,8s1.5,0.67,1.5,1.5S12.83,11,12,11z M8.5,11C7.67,11,7,10.33,7,9.5S7.67,8,8.5,8s1.5,0.67,1.5,1.5S9.33,11,8.5,11z',
+		features: 'M22.7,19l-9.1-9.1c0.9-2.3,0.4-5-1.5-6.9c-2-2-5-2.4-7.4-1.3L9,6L6,9L1.6,4.7C0.4,7.1,0.9,10.1,2.9,12.1c1.9,1.9,4.6,2.4,6.9,1.5l9.1,9.1c0.4,0.4,1,0.4,1.4,0l2.3-2.3C23.1,20,23.1,19.3,22.7,19z',
+		system: 'M19.14,12.94c0.04-0.31,0.06-0.63,0.06-0.94c0-0.31-0.02-0.63-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.37,4.8,11.69,4.8,12s0.02,0.63,0.06,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z',
+		user: 'M12,12c2.21,0,4-1.79,4-4s-1.79-4-4-4S8,5.79,8,8S9.79,12,12,12z M12,14c-2.67,0-8,1.34-8,4v2h16v-2C20,15.34,14.67,14,12,14z',
+		robot: 'M20,9V7c0-1.1-0.9-2-2-2h-3c0-1.66-1.34-3-3-3S9,3.34,9,5H6C4.9,5,4,5.9,4,7v2c-1.66,0-3,1.34-3,3s1.34,3,3,3v4c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-4c1.66,0,3-1.34,3-3S21.66,9,20,9z M7.5,11.5C7.5,10.67,8.17,10,9,10s1.5,0.67,1.5,1.5S9.83,13,9,13S7.5,12.33,7.5,11.5z M16,17H8v-2h8V17z M15,13c-0.83,0-1.5-0.67-1.5-1.5S14.17,10,15,10s1.5,0.67,1.5,1.5S15.83,13,15,13z',
+		code: 'M9.4,16.6L4.8,12l4.6-4.6L8,6l-6,6l6,6L9.4,16.6z M14.6,16.6l4.6-4.6l-4.6-4.6L16,6l6,6l-6,6L14.6,16.6z',
+		check: 'M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41-1.41z',
+		thought: 'M20,2H4C2.9,2,2,2.9,2,4v12c0,1.1,0.9,2,2,2h14l4,4V4C22,2.9,21.1,2,20,2z M13,14H11v-2h2V14z M14.1,9.1l-0.9,0.92C12.45,10.78,12,11.25,12,12h-2v-0.5c0-0.82,0.45-1.56,1-2.13l1.24-1.26C12.72,7.64,13,7.08,13,6.5C13,5.12,11.88,4,10.5,4S8,5.12,8,6.5H6C6,4.01,8.01,2,10.5,2S15,4.01,15,6.5C15,7.48,14.62,8.36,14.1,9.1z',
+		keyboard: 'M20,5H4C2.9,5,2.01,5.9,2.01,7L2,17c0,1.1,0.89,2,2,2h16c1.1,0,2-0.9,2-2V7C22,5.9,21.1,5,20,5z M11,8h2v2h-2V8z M11,11h2v2h-2V11z M8,8h2v2H8V8z M8,11h2v2H8V11z M7,13H5v-2h2V13z M7,10H5V8h2V10z M16,17H8v-2h8V17z M16,13h-2v-2h2V13z M16,10h-2V8h2V10z M19,13h-2v-2h2V13z M19,10h-2V8h2V10z',
+		sync: 'M12,6v3l4-4l-4-4v3c-4.42,0-8,3.58-8,8c0,1.57.46,3.03,1.24,4.26L6.7,14.8c-.45-.83-.7-1.79-.7-2.8C6,8.69,8.69,6,12,6z M18.76,7.74L17.3,9.2c.45.83.7,1.79.7,2.8c0,3.31-2.69,6-6,6v-3l-4,4l4,4v-3c4.42,0,8-3.58,8-8C20,10.43,19.54,8.97,18.76,7.74z',
+		shield: 'M12,1L3,5v6c0,5.55,3.84,10.74,9,12c5.16-1.26,9-6.45,9-12V5L12,1z M12,11.99h7c-0.53,4.12-3.28,7.79-7,8.94V12H5V6.3l7-3.11V11.99z',
+		update: 'M21,10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-0.1c-2.73,2.71-2.73,7.08,0,9.79s7.15,2.71,9.88,0C18.32,15.65,19,14.08,19,12.1h2c0,1.98-0.88,4.55-2.64,6.29c-3.51,3.48-9.21,3.48-12.72,0c-3.5-3.47-3.53-9.11-0.02-12.58s9.14-3.47,12.65,0L21,3V10.12z M12.5,8v4.25l3.5,2.08l-0.72,1.21L11,13V8H12.5z',
+		copy: 'M16,1H4C2.9,1,2,1.9,2,3v14h2V3h12V1z M19,5H8C6.9,5,6,5.9,6,7v14c0,1.1,0.9,2,2,2h11c1.1,0,2-0.9,2-2V7C21,5.9,20.1,5,19,5z M19,21H8V7h11V21z',
+		chevronDown: 'M7.41,8.59L12,13.17l4.59-4.58L18,10l-6,6l-6-6L7.41,8.59z',
+		math: 'M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M13.12,14.39L12,16l-2-3l-2.02,3H6l3.05-4.5L6.08,7h1.9l1.96,2.94L11.88,7h1.9l-2.94,4.5L13.91,15L13.12,14.39z M17,14h-2v2h-1v-2h-2v-1h2v-2h1v2h2V14z',
+		enter: 'M19,7v4H5.83l3.58-3.59L8,6l-6,6l6,6l1.41-1.41L5.83,13H21V7H19z',
+		counter: 'M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M17,13h-4v4h-2v-4H7v-2h4V7h2v4h4V13z',
+	};
+	function createSvgIcon(id, extraClass) {
+		const svgNS = 'http://www.w3.org/2000/svg';
+		const svg = document.createElementNS(svgNS, 'svg');
+		svg.setAttribute('viewBox', '0 0 24 24');
+		svg.setAttribute('class', 'ab-icon' + (extraClass ? ' ' + extraClass : ''));
+		const path = document.createElementNS(svgNS, 'path');
+		path.setAttribute('d', ICONS[id] || '');
+		path.setAttribute('fill', 'currentColor');
+		svg.appendChild(path);
+		return svg;
+	}
+
 	// ===== I18N 字典 =====
 	const T = {
 		zh: {
-			tab_appearance: '🎨 外观', tab_features: '🛠️ 功能', tab_system: '⚙️ 系统',
-			colors_title: '🎨 颜色自定义', enable_custom_colors: '启用自定义颜色',
+			tab_appearance: '外观', tab_features: '功能', tab_system: '系统',
+			colors_title: '颜色自定义', enable_custom_colors: '启用自定义颜色',
 			lbl_user_msg: '用户消息', lbl_ai_resp: 'AI回复', lbl_code: '代码块', lbl_status: '操作状态', lbl_thinking: '思考过程',
-			fontsize_title: '🔤 字体大小', enable_custom_fontsize: '启用自定义字体大小', btn_sync: '同步全部',
-			fontfamily_title: '🔤 字体样式', enable_custom_fontfamily: '启用自定义字体样式',
-			copy_title: '📋 一键复制', enable_copy: '启用复制按钮',
-			hotkey_title: '⌨️ 快捷键设置', enable_hotkey: '自定义发送快捷键', lbl_send_hotkey: '发送快捷键',
-			auto_accept_title: '🤖 自动操作', enable_auto_accept: '启用自动操作', auto_accept_desc: '选择要自动点击的按钮类型',
+			fontsize_title: '字体大小', enable_custom_fontsize: '启用自定义字体大小', btn_sync: '同步全部',
+			fontfamily_title: '字体样式', enable_custom_fontfamily: '启用自定义字体样式',
+			copy_title: '一键复制', enable_copy: '启用复制按钮',
+			hotkey_title: '快捷键设置', enable_hotkey: '自定义发送快捷键', lbl_send_hotkey: '发送快捷键',
+			auto_accept_title: '自动操作', enable_auto_accept: '启用自动操作', auto_accept_desc: '选择要自动点击的按钮类型',
 			lbl_remaining: '剩余次数', lbl_unlimited: '无限', btn_clear_stats: '清零',
-			toast_remaining_zero: '⏸ 自动操作已暂停：剩余次数已用完',
+			toast_remaining_zero: '自动操作已暂停：剩余次数已用完',
 			stat_clicks: '已点击', stat_blocked: '已阻止', stat_verified: '已验证',
-			banned_title: '🛡️ 安全规则', banned_desc: '包含以下关键词的命令将不会被自动执行（每行一个）',
+			banned_title: '安全规则', banned_desc: '包含以下关键词的命令将不会被自动执行（每行一个）',
 			btn_save: '保存', btn_reset: '重置', banned_saved: '✓ 安全规则已保存', banned_reset: '✓ 已重置为默认值',
-			version_title: '🔄 版本更新', lbl_auto_update: '启动时自动检测', lbl_manual_update: '手动检测更新', btn_check_update: '立即检测',
+			version_title: '版本更新', lbl_auto_update: '启动时自动检测', lbl_manual_update: '手动检测更新', btn_check_update: '立即检测',
 			update_checking: '正在检测...', update_latest: '✓ 已是最新版本', update_found: '✓ 发现新版本', update_failed: '✗ 检测失败',
 			update_available: '新版本可用', btn_download: '下载更新',
-			latex_title: '📐 LaTeX 公式', enable_latex: '启用 LaTeX 渲染', latex_desc: '自动渲染 AI 回复中的 LaTeX 数学公式'
+			latex_title: 'LaTeX 公式', enable_latex: '启用 LaTeX 渲染', latex_desc: '自动渲染 AI 回复中的 LaTeX 数学公式'
 		},
 		en: {
-			tab_appearance: '🎨 Appearance', tab_features: '🛠️ Features', tab_system: '⚙️ System',
-			colors_title: '🎨 Colors', enable_custom_colors: 'Enable Custom Colors',
+			tab_appearance: 'Appearance', tab_features: 'Features', tab_system: 'System',
+			colors_title: 'Colors', enable_custom_colors: 'Enable Custom Colors',
 			lbl_user_msg: 'User Message', lbl_ai_resp: 'AI Response', lbl_code: 'Code Block', lbl_status: 'Action Status', lbl_thinking: 'Thinking Process',
-			fontsize_title: '🔤 Font Size', enable_custom_fontsize: 'Enable Custom Font Size', btn_sync: 'Sync All',
-			fontfamily_title: '🔤 Font Family', enable_custom_fontfamily: 'Enable Custom Font Family',
-			copy_title: '📋 One-Click Copy', enable_copy: 'Enable Copy Buttons',
-			hotkey_title: '⌨️ Shortcuts', enable_hotkey: 'Custom Send Hotkey', lbl_send_hotkey: 'Send Hotkey',
-			auto_accept_title: '🤖 Auto Accept', enable_auto_accept: 'Enable Auto Accept', auto_accept_desc: 'Select button types to auto-click',
+			fontsize_title: 'Font Size', enable_custom_fontsize: 'Enable Custom Font Size', btn_sync: 'Sync All',
+			fontfamily_title: 'Font Family', enable_custom_fontfamily: 'Enable Custom Font Family',
+			copy_title: 'One-Click Copy', enable_copy: 'Enable Copy Buttons',
+			hotkey_title: 'Shortcuts', enable_hotkey: 'Custom Send Hotkey', lbl_send_hotkey: 'Send Hotkey',
+			auto_accept_title: 'Auto Accept', enable_auto_accept: 'Enable Auto Accept', auto_accept_desc: 'Select button types to auto-click',
 			lbl_remaining: 'Remaining', lbl_unlimited: 'Unlimited', btn_clear_stats: 'Clear',
-			toast_remaining_zero: '⏸ Auto-accept paused: quota exhausted',
+			toast_remaining_zero: 'Auto-accept paused: quota exhausted',
 			stat_clicks: 'Clicked', stat_blocked: 'Blocked', stat_verified: 'Verified',
-			banned_title: '🛡️ Safety Rules', banned_desc: 'Commands containing these keywords will not be auto-executed (one per line)',
+			banned_title: 'Safety Rules', banned_desc: 'Commands containing these keywords will not be auto-executed (one per line)',
 			btn_save: 'Save', btn_reset: 'Reset', banned_saved: '✓ Safety rules saved', banned_reset: '✓ Reset to defaults',
-			version_title: '🔄 Version Update', lbl_auto_update: 'Auto check on startup', lbl_manual_update: 'Manual check', btn_check_update: 'Check Now',
+			version_title: 'Version Update', lbl_auto_update: 'Auto check on startup', lbl_manual_update: 'Manual check', btn_check_update: 'Check Now',
 			update_checking: 'Checking...', update_latest: '✓ Already latest', update_found: '✓ New version found', update_failed: '✗ Check failed',
 			update_available: 'New version available', btn_download: 'Download',
-			latex_title: '📐 LaTeX Formulas', enable_latex: 'Enable LaTeX Rendering', latex_desc: 'Auto-render LaTeX math formulas in AI responses'
+			latex_title: 'LaTeX Formulas', enable_latex: 'Enable LaTeX Rendering', latex_desc: 'Auto-render LaTeX math formulas in AI responses'
 		}
 	};
 	function t(key) { return (T[currentSettings.lang] || T.zh)[key] || key; }
 
 	// ===== 配置 =====
-	const APP_VERSION = '0.2.2';
+	const APP_VERSION = '0.2.6';
 	const STORAGE_KEY = 'antigravity-better-settings';
 
 	const COLOR_CONFIGS = [
-		{ id: 'user-message', cssVar: '--color-user-message', cssClass: 'color-user-message', default: '#60A5FA', enabled: true, icon: '📝' },
-		{ id: 'ai-response', cssVar: '--color-ai-response', cssClass: 'color-ai-response', default: '#E0E0E0', enabled: true, icon: '🤖' },
-		{ id: 'code-block', cssVar: '--color-code-block', cssClass: 'color-code-block', default: '#A78BFA', enabled: true, icon: '💻' },
-		{ id: 'action-status', cssVar: '--color-action-status', cssClass: 'color-action-status', default: '#4ADE80', enabled: false, icon: '✅' },
-		{ id: 'thinking', cssVar: '--color-thinking', cssClass: 'color-thinking', default: '#9CA3AF', enabled: false, icon: '💭' },
+		{ id: 'user-message', cssVar: '--color-user-message', cssClass: 'color-user-message', default: '#60A5FA', enabled: true, icon: 'user' },
+		{ id: 'ai-response', cssVar: '--color-ai-response', cssClass: 'color-ai-response', default: '#E0E0E0', enabled: true, icon: 'robot' },
+		{ id: 'code-block', cssVar: '--color-code-block', cssClass: 'color-code-block', default: '#A78BFA', enabled: true, icon: 'code' },
+		{ id: 'action-status', cssVar: '--color-action-status', cssClass: 'color-action-status', default: '#4ADE80', enabled: false, icon: 'check' },
+		{ id: 'thinking', cssVar: '--color-thinking', cssClass: 'color-thinking', default: '#9CA3AF', enabled: false, icon: 'thought' },
 	];
 
 	const FONTSIZE_CONFIGS = [
-		{ id: 'user-message', cssVar: '--fontsize-user-message', cssClass: 'fontsize-user-message', default: 14, enabled: true, icon: '📝' },
-		{ id: 'ai-response', cssVar: '--fontsize-ai-response', cssClass: 'fontsize-ai-response', default: 14, enabled: true, icon: '🤖' },
-		{ id: 'code-block', cssVar: '--fontsize-code-block', cssClass: 'fontsize-code-block', default: 13, enabled: true, icon: '💻' },
-		{ id: 'action-status', cssVar: '--fontsize-action-status', cssClass: 'fontsize-action-status', default: 13, enabled: false, icon: '✅' },
-		{ id: 'thinking', cssVar: '--fontsize-thinking', cssClass: 'fontsize-thinking', default: 13, enabled: false, icon: '💭' },
+		{ id: 'user-message', cssVar: '--fontsize-user-message', cssClass: 'fontsize-user-message', default: 14, enabled: true, icon: 'user' },
+		{ id: 'ai-response', cssVar: '--fontsize-ai-response', cssClass: 'fontsize-ai-response', default: 14, enabled: true, icon: 'robot' },
+		{ id: 'code-block', cssVar: '--fontsize-code-block', cssClass: 'fontsize-code-block', default: 13, enabled: true, icon: 'code' },
+		{ id: 'action-status', cssVar: '--fontsize-action-status', cssClass: 'fontsize-action-status', default: 13, enabled: false, icon: 'check' },
+		{ id: 'thinking', cssVar: '--fontsize-thinking', cssClass: 'fontsize-thinking', default: 13, enabled: false, icon: 'thought' },
 	];
 
 	const FONTFAMILY_CONFIGS = [
-		{ id: 'user-message', cssVar: '--fontfamily-user-message', cssClass: 'fontfamily-user-message', default: 'inherit', enabled: false, icon: '📝' },
-		{ id: 'ai-response', cssVar: '--fontfamily-ai-response', cssClass: 'fontfamily-ai-response', default: 'inherit', enabled: false, icon: '🤖' },
-		{ id: 'code-block', cssVar: '--fontfamily-code-block', cssClass: 'fontfamily-code-block', default: 'inherit', enabled: false, icon: '💻' },
-		{ id: 'action-status', cssVar: '--fontfamily-action-status', cssClass: 'fontfamily-action-status', default: 'inherit', enabled: false, icon: '✅' },
-		{ id: 'thinking', cssVar: '--fontfamily-thinking', cssClass: 'fontfamily-thinking', default: 'inherit', enabled: false, icon: '💭' },
+		{ id: 'user-message', cssVar: '--fontfamily-user-message', cssClass: 'fontfamily-user-message', default: 'inherit', enabled: false, icon: 'user' },
+		{ id: 'ai-response', cssVar: '--fontfamily-ai-response', cssClass: 'fontfamily-ai-response', default: 'inherit', enabled: false, icon: 'robot' },
+		{ id: 'code-block', cssVar: '--fontfamily-code-block', cssClass: 'fontfamily-code-block', default: 'inherit', enabled: false, icon: 'code' },
+		{ id: 'action-status', cssVar: '--fontfamily-action-status', cssClass: 'fontfamily-action-status', default: 'inherit', enabled: false, icon: 'check' },
+		{ id: 'thinking', cssVar: '--fontfamily-thinking', cssClass: 'fontfamily-thinking', default: 'inherit', enabled: false, icon: 'thought' },
 	];
 
 	// V0.2 复制配置：选择器已适配
@@ -465,6 +510,9 @@
 
 	const AUTO_ACCEPT_CONFIGS = [
 		{ id: 'accept', label: 'Accept', defaultEnabled: false },
+		{ id: 'accept all', label: 'Accept all', defaultEnabled: true },
+		{ id: 'always allow', label: 'Always Allow', defaultEnabled: true },
+		{ id: 'allow this conversation', label: 'Allow This Conversation', defaultEnabled: true },
 		{ id: 'retry', label: 'Retry', defaultEnabled: true },
 		{ id: 'run', label: 'Run', defaultEnabled: true },
 		{ id: 'apply', label: 'Apply', defaultEnabled: true },
@@ -555,11 +603,15 @@
 		const lb = el('span', 'ab-main-toggle-label', t(i18nKey)); lb.dataset.i18n = i18nKey;
 		w.appendChild(lb); w.appendChild(createToggle(checked, onChange)); return w;
 	}
-	function createAccordion(i18nKey, expanded) {
+	function createAccordion(i18nKey, expanded, iconId) {
 		const item = el('div', 'ab-accordion' + (expanded ? ' expanded' : ''));
 		const header = el('div', 'ab-accordion-header');
-		const title = el('span', 'ab-accordion-title', t(i18nKey)); title.dataset.i18n = i18nKey;
-		const icon = el('span', 'ab-accordion-icon', '▼');
+		const title = el('span', 'ab-accordion-title');
+		if (iconId) title.appendChild(createSvgIcon(iconId));
+		const titleText = el('span', null, t(i18nKey)); titleText.dataset.i18n = i18nKey;
+		title.appendChild(titleText);
+		const icon = el('span', 'ab-accordion-icon');
+		icon.appendChild(createSvgIcon('chevronDown'));
 		header.appendChild(title); header.appendChild(icon);
 		header.addEventListener('click', () => item.classList.toggle('expanded'));
 		const body = el('div', 'ab-accordion-body');
@@ -567,10 +619,12 @@
 		body.appendChild(inner); item.appendChild(header); item.appendChild(body);
 		return { item, inner };
 	}
-	function createSettingItem(icon, i18nKey) {
+	function createSettingItem(iconId, i18nKey) {
 		const row = el('div', 'ab-setting');
 		const left = el('div', 'ab-setting-left');
-		left.appendChild(el('span', 'ab-setting-icon', icon));
+		const iconWrap = el('span', 'ab-setting-icon');
+		iconWrap.appendChild(createSvgIcon(iconId));
+		left.appendChild(iconWrap);
 		const name = el('span', 'ab-setting-name', t(i18nKey)); name.dataset.i18n = i18nKey;
 		left.appendChild(name);
 		const right = el('div', 'ab-setting-right');
@@ -585,12 +639,13 @@
 			const key = e.dataset.i18n;
 			const val = t(key); if (val) e.textContent = val;
 		});
-		if (langSwitchBtn) langSwitchBtn.textContent = currentSettings.lang === 'zh' ? '🌐 English' : '🌐 中文';
+		if (langSwitchBtn) langSwitchBtn.textContent = currentSettings.lang === 'zh' ? 'English' : '中文';
 	}
 
 	// ===== 创建设置面板 =====
 	function createSettingsUI(panelEl) {
 		if (panelEl.querySelector('#ab-settings-btn')) return;
+		const autoAcceptPatternControls = {};
 
 		// 悬浮按钮
 		const btn = el('button'); btn.id = 'ab-settings-btn'; btn.title = 'Antigravity Better Settings';
@@ -610,12 +665,12 @@
 		const brand = el('span', 'ab-brand', 'Antigravity Better');
 		const ver = el('span', 'ab-version', 'v' + APP_VERSION); brand.appendChild(ver);
 		const links = el('div', 'ab-brand-links');
-		const link1 = document.createElement('a'); link1.className = 'ab-brand-link'; link1.href = 'https://dpit.lib00.com'; link1.target = '_blank'; link1.textContent = '🌐 dpit.lib00.com';
-		const link2 = document.createElement('a'); link2.className = 'ab-brand-link'; link2.href = 'https://github.com/016/Antigravity-Better'; link2.target = '_blank'; link2.textContent = '📦 GitHub';
+		const link1 = document.createElement('a'); link1.className = 'ab-brand-link'; link1.href = 'https://dpit.lib00.com'; link1.target = '_blank'; link1.textContent = 'dpit.lib00.com';
+		const link2 = document.createElement('a'); link2.className = 'ab-brand-link'; link2.href = 'https://github.com/016/Antigravity-Better'; link2.target = '_blank'; link2.textContent = 'GitHub';
 		links.appendChild(link1); links.appendChild(link2);
 		headerLeft.appendChild(brand); headerLeft.appendChild(links);
 		const headerRight = el('div', 'ab-header-right');
-		langSwitchBtn = el('button', 'ab-lang-switch', currentSettings.lang === 'zh' ? '🌐 English' : '🌐 中文');
+		langSwitchBtn = el('button', 'ab-lang-switch', currentSettings.lang === 'zh' ? 'English' : '中文');
 		langSwitchBtn.addEventListener('click', () => { currentSettings.lang = currentSettings.lang === 'zh' ? 'en' : 'zh'; saveSettings(currentSettings); updateLanguage(); });
 		const closeBtn = el('button', 'ab-close', '×');
 		headerRight.appendChild(langSwitchBtn); headerRight.appendChild(closeBtn);
@@ -625,14 +680,17 @@
 		// === Tab 导航 ===
 		const tabNav = el('div', 'ab-tab-nav');
 		const tabs = [
-			{ id: 'appearance', i18n: 'tab_appearance' },
-			{ id: 'features', i18n: 'tab_features' },
-			{ id: 'system', i18n: 'tab_system' },
+			{ id: 'appearance', i18n: 'tab_appearance', icon: 'appearance' },
+			{ id: 'features', i18n: 'tab_features', icon: 'features' },
+			{ id: 'system', i18n: 'tab_system', icon: 'system' },
 		];
 		const tabContents = {};
 		tabs.forEach((tab, i) => {
-			const tbtn = el('button', 'ab-tab-btn' + (i === 0 ? ' active' : ''), t(tab.i18n));
-			tbtn.dataset.i18n = tab.i18n; tbtn.dataset.tab = tab.id;
+			const tbtn = el('button', 'ab-tab-btn' + (i === 0 ? ' active' : ''));
+			tbtn.appendChild(createSvgIcon(tab.icon));
+			const tbtnText = el('span', null, t(tab.i18n)); tbtnText.dataset.i18n = tab.i18n;
+			tbtn.appendChild(tbtnText);
+			tbtn.dataset.tab = tab.id;
 			tabNav.appendChild(tbtn);
 			const content = el('div', 'ab-tab-content' + (i === 0 ? ' active' : ''));
 			tabContents[tab.id] = content;
@@ -655,7 +713,7 @@
 		const tabAppearance = tabContents['appearance'];
 
 		// -- 颜色自定义 --
-		const colorAcc = createAccordion('colors_title', true);
+		const colorAcc = createAccordion('colors_title', true, 'appearance');
 		colorAcc.inner.appendChild(createMainToggle('enable_custom_colors', currentSettings.masterEnabled, (v) => {
 			currentSettings.masterEnabled = v; saveSettings(currentSettings); applyColorSettings();
 		}));
@@ -672,7 +730,7 @@
 		tabAppearance.appendChild(colorAcc.item);
 
 		// -- 字体大小 --
-		const fontAcc = createAccordion('fontsize_title', false);
+		const fontAcc = createAccordion('fontsize_title', false, 'math');
 		fontAcc.inner.appendChild(createMainToggle('enable_custom_fontsize', currentSettings.fontsizeMasterEnabled, (v) => {
 			currentSettings.fontsizeMasterEnabled = v; saveSettings(currentSettings); applyFontsizeSettings();
 		}));
@@ -700,7 +758,7 @@
 		tabAppearance.appendChild(fontAcc.item);
 
 		// -- 字体样式 --
-		const ffAcc = createAccordion('fontfamily_title', false);
+		const ffAcc = createAccordion('fontfamily_title', false, 'appearance');
 		ffAcc.inner.appendChild(createMainToggle('enable_custom_fontfamily', currentSettings.fontfamilyMasterEnabled, (v) => {
 			currentSettings.fontfamilyMasterEnabled = v; saveSettings(currentSettings); applyFontfamilySettings();
 		}));
@@ -727,7 +785,7 @@
 		tabAppearance.appendChild(ffAcc.item);
 
 		// -- LaTeX --
-		const latexAcc = createAccordion('latex_title', false);
+		const latexAcc = createAccordion('latex_title', false, 'math');
 		const latexStatusEl = el('div', 'ab-save-status');
 		latexAcc.inner.appendChild(createMainToggle('enable_latex', currentSettings.latexEnabled, (v) => {
 			currentSettings.latexEnabled = v; saveSettings(currentSettings); applyLatexSettings();
@@ -740,12 +798,12 @@
 		const tabFeatures = tabContents['features'];
 
 		// -- 一键复制 --
-		const copyAcc = createAccordion('copy_title', true);
+		const copyAcc = createAccordion('copy_title', true, 'copy');
 		copyAcc.inner.appendChild(createMainToggle('enable_copy', currentSettings.copyEnabled, (v) => {
 			currentSettings.copyEnabled = v; saveSettings(currentSettings); applyCopySettings(panelEl);
 		}));
 		const copyI18nMap = { 'copy-user': 'lbl_user_msg', 'copy-thinking': 'lbl_thinking', 'copy-ai': 'lbl_ai_resp' };
-		const copyIconMap = { 'copy-user': '📝', 'copy-thinking': '💭', 'copy-ai': '🤖' };
+		const copyIconMap = { 'copy-user': 'user', 'copy-thinking': 'thought', 'copy-ai': 'robot' };
 		COPY_CONFIGS.forEach(c => {
 			const { row, right } = createSettingItem(copyIconMap[c.id], copyI18nMap[c.id]);
 			right.appendChild(createToggle(currentSettings.copy[c.id]?.enabled ?? true, (v) => {
@@ -757,11 +815,11 @@
 		tabFeatures.appendChild(copyAcc.item);
 
 		// -- 快捷键 --
-		const hotkeyAcc = createAccordion('hotkey_title', false);
+		const hotkeyAcc = createAccordion('hotkey_title', false, 'keyboard');
 		hotkeyAcc.inner.appendChild(createMainToggle('enable_hotkey', currentSettings.hotkeyEnabled, (v) => {
 			currentSettings.hotkeyEnabled = v; saveSettings(currentSettings); applyHotkeySettings();
 		}));
-		const { row: hkRow, right: hkRight } = createSettingItem('↵', 'lbl_send_hotkey');
+		const { row: hkRow, right: hkRight } = createSettingItem('enter', 'lbl_send_hotkey');
 		const hkSelect = el('select', 'ab-select-input');
 		HOTKEY_OPTIONS.forEach(o => { const opt = el('option', null, o.label); opt.value = o.id; hkSelect.appendChild(opt); });
 		hkSelect.value = currentSettings.sendHotkey;
@@ -771,7 +829,7 @@
 		tabFeatures.appendChild(hotkeyAcc.item);
 
 		// -- 自动操作 --
-		const autoAcc = createAccordion('auto_accept_title', false);
+		const autoAcc = createAccordion('auto_accept_title', false, 'robot');
 		autoAcc.inner.appendChild(createMainToggle('enable_auto_accept', currentSettings.autoAcceptEnabled, (v) => {
 			currentSettings.autoAcceptEnabled = v; saveSettings(currentSettings); applyAutoAcceptSettings(panelEl);
 		}));
@@ -783,12 +841,13 @@
 			const isOn = currentSettings.autoAcceptPatterns[c.id];
 			const lbl = el('label', 'ab-pattern-item' + (isOn ? ' active' : ''));
 			const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = isOn;
+			autoAcceptPatternControls[c.id] = { checkbox: cb, label: lbl };
 			cb.addEventListener('change', () => { currentSettings.autoAcceptPatterns[c.id] = cb.checked; lbl.classList.toggle('active', cb.checked); saveSettings(currentSettings); });
 			lbl.appendChild(cb); lbl.appendChild(el('span', null, c.label)); patternGrid.appendChild(lbl);
 		});
 		autoAcc.inner.appendChild(patternGrid);
 		// 剩余次数设置
-		const { row: remainRow, right: remainRight } = createSettingItem('🔢', 'lbl_remaining');
+		const { row: remainRow, right: remainRight } = createSettingItem('counter', 'lbl_remaining');
 		const remainInput = document.createElement('input'); remainInput.type = 'number'; remainInput.className = 'ab-fontsize-input';
 		remainInput.min = 0; remainInput.max = 9999; remainInput.value = currentSettings.autoAcceptRemaining;
 		remainInput.style.width = '58px';
@@ -811,9 +870,11 @@
 		const statClicksEl = el('span', 'ab-stat-value', String(currentSettings.autoAcceptStats.clicks));
 		const statBlockedEl = el('span', 'ab-stat-value', String(currentSettings.autoAcceptStats.blocked));
 		const statVerifiedEl = el('span', 'ab-stat-value', String(currentSettings.autoAcceptStats.verified));
-		[{ icon: '✅', el: statClicksEl, i18n: 'stat_clicks' }, { icon: '🛡️', el: statBlockedEl, i18n: 'stat_blocked' }, { icon: '✓', el: statVerifiedEl, i18n: 'stat_verified' }].forEach(s => {
+		[{ icon: 'check', el: statClicksEl, i18n: 'stat_clicks' }, { icon: 'shield', el: statBlockedEl, i18n: 'stat_blocked' }, { icon: 'check', el: statVerifiedEl, i18n: 'stat_verified' }].forEach(s => {
 			const item = el('div', 'ab-stat-item');
-			item.appendChild(el('span', 'ab-stat-icon', s.icon)); item.appendChild(s.el);
+			const statIcon = el('span', 'ab-stat-icon');
+			statIcon.appendChild(createSvgIcon(s.icon));
+			item.appendChild(statIcon); item.appendChild(s.el);
 			const lb = el('span', 'ab-stat-label', t(s.i18n)); lb.dataset.i18n = s.i18n; item.appendChild(lb);
 			statsPanel.appendChild(item);
 		});
@@ -832,7 +893,7 @@
 		tabFeatures.appendChild(autoAcc.item);
 
 		// -- 安全规则 --
-		const bannedAcc = createAccordion('banned_title', false);
+		const bannedAcc = createAccordion('banned_title', false, 'shield');
 		const bannedDescEl = el('div', 'ab-setting-desc', t('banned_desc')); bannedDescEl.dataset.i18n = 'banned_desc';
 		bannedAcc.inner.appendChild(bannedDescEl);
 		const bannedInput = el('textarea', 'ab-textarea'); bannedInput.rows = 6;
@@ -856,13 +917,14 @@
 
 		// ============ Tab: 系统 ============
 		const tabSystem = tabContents['system'];
-		const verAcc = createAccordion('version_title', true);
-		const { row: autoRow, right: autoRight } = createSettingItem('🔄', 'lbl_auto_update');
+		const verAcc = createAccordion('version_title', true, 'update');
+		const { row: autoRow, right: autoRight } = createSettingItem('sync', 'lbl_auto_update');
 		autoRight.appendChild(createToggle(currentSettings.autoUpdateEnabled, (v) => { currentSettings.autoUpdateEnabled = v; saveSettings(currentSettings); }));
 		verAcc.inner.appendChild(autoRow);
-		const { row: manualRow, right: manualRight } = createSettingItem('👉', 'lbl_manual_update');
+		const { row: manualRow, right: manualRight } = createSettingItem('update', 'lbl_manual_update');
 		const updateStatusEl = el('div', 'ab-save-status');
-		const checkBtn = el('button', 'ab-btn primary', t('btn_check_update')); checkBtn.dataset.i18n = 'btn_check_update';
+		const checkBtn = el('button', 'ab-btn secondary', t('btn_check_update')); checkBtn.dataset.i18n = 'btn_check_update';
+		checkBtn.style.cssText = 'flex:none; padding:4px 10px; font-size:11px;';
 		checkBtn.addEventListener('click', async () => {
 			updateStatusEl.textContent = t('update_checking'); checkBtn.disabled = true;
 			const result = await checkForUpdate();
@@ -1012,7 +1074,7 @@
 	}
 
 	// ===== 自动操作功能 =====
-	let autoAcceptObserver = null;
+	let autoAcceptObserver = null, autoAcceptPermissionTimer = null, autoAcceptCommandTimer = null;
 	function isAutoAcceptButton(btn) {
 		const text = (btn.textContent || '').trim().toLowerCase();
 		if (!text || text.length > 50) return false;
@@ -1040,6 +1102,95 @@
 		const list = currentSettings.bannedCommands || [];
 		return list.some(p => p && text.toLowerCase().includes(p.toLowerCase()));
 	}
+	function isDiffConfirmationArea(btn) {
+		let node = btn;
+		for (let depth = 0; node && depth < 6; depth++) {
+			const text = (node.textContent || '').toLowerCase();
+			const className = typeof node.className === 'string' ? node.className : '';
+			if (className.includes('outline-solid') && className.includes('justify-between') && text.includes('file with changes') && text.includes('reject all') && text.includes('accept all')) return true;
+			node = node.parentElement;
+		}
+		return false;
+	}
+	function findDiffAcceptAllTarget(scope) {
+		const root = scope || document.querySelector('.antigravity-agent-side-panel');
+		if (!root) return null;
+		return Array.from(root.querySelectorAll('span')).find(el => {
+			const text = (el.textContent || '').trim().toLowerCase();
+			const className = typeof el.className === 'string' ? el.className : '';
+			return text === 'accept all' && className.includes('cursor-pointer') && isDiffConfirmationArea(el);
+		});
+	}
+	function normalizeAutoAcceptText(text) {
+		return (text || '').toLowerCase().replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\s+/g, '').trim();
+	}
+	function isVisibleEnabledActionElement(el) {
+		if (!el) return false;
+		const style = window.getComputedStyle(el);
+		const rect = el.getBoundingClientRect();
+		return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0 && !el.disabled && el.getAttribute('aria-disabled') !== 'true';
+	}
+	function resolvePermissionClickTarget(candidate, root) {
+		if (!candidate) return null;
+		const directButton = candidate.matches('button, [role="button"]') ? candidate : null;
+		const nestedButton = candidate.querySelector('button, [role="button"]');
+		const clickableSelf = typeof candidate.className === 'string' && candidate.className.includes('cursor-pointer') ? candidate : null;
+		const targets = [directButton, nestedButton, candidate.closest('button, [role="button"]'), candidate.closest('[class*="cursor-pointer"]'), clickableSelf].filter(Boolean);
+		return targets.find(el => root.contains(el) && !el.closest('#ab-overlay') && !el.closest('#ab-modal') && isVisibleEnabledActionElement(el));
+	}
+	function findScopedPermissionTarget(scope, expectedText) {
+		const root = scope || document.querySelector('.antigravity-agent-side-panel');
+		if (!root) return null;
+		const normalizedExpected = normalizeAutoAcceptText(expectedText);
+		const candidates = Array.from(root.querySelectorAll('button, [role="button"], span, div')).filter(el => {
+			if (el.closest('#ab-overlay') || el.closest('#ab-modal')) return false;
+			return normalizeAutoAcceptText(el.textContent) === normalizedExpected;
+		});
+		for (const candidate of candidates) {
+			const target = resolvePermissionClickTarget(candidate, root);
+			if (target) return target;
+		}
+		return null;
+	}
+	async function performScopedPermissionAutoAccept(scope) {
+		if (!scope || !currentSettings.autoAcceptEnabled) return;
+		if (!currentSettings.autoAcceptUnlimited && currentSettings.autoAcceptRemaining <= 0) return;
+		if (currentSettings.autoAcceptPatterns['allow this conversation'] && (currentSettings.autoAcceptUnlimited || currentSettings.autoAcceptRemaining > 0)) {
+			const allowConversationTarget = findScopedPermissionTarget(scope, 'allow this conversation');
+			if (allowConversationTarget) {
+				allowConversationTarget.click();
+				if (scope._abUpdateStats) scope._abUpdateStats({ clicks: 1 });
+				await new Promise(r => setTimeout(r, 100));
+			}
+		}
+		if (currentSettings.autoAcceptPatterns['always allow'] && (currentSettings.autoAcceptUnlimited || currentSettings.autoAcceptRemaining > 0)) {
+			const alwaysAllowTarget = findScopedPermissionTarget(scope, 'always allow');
+			if (alwaysAllowTarget) {
+				alwaysAllowTarget.click();
+				if (scope._abUpdateStats) scope._abUpdateStats({ clicks: 1 });
+				await new Promise(r => setTimeout(r, 100));
+			}
+		}
+	}
+	async function performScopedCommandAutoAccept(scope) {
+		if (!scope || !currentSettings.autoAcceptEnabled) return;
+		if (!currentSettings.autoAcceptUnlimited && currentSettings.autoAcceptRemaining <= 0) return;
+		const buttons = scope.querySelectorAll('button');
+		for (const btn of buttons) {
+			if (!currentSettings.autoAcceptUnlimited && currentSettings.autoAcceptRemaining <= 0) break;
+			const text = (btn.textContent || '').trim().toLowerCase();
+			if (!/run|execute/i.test(text)) continue;
+			if (!isAutoAcceptButton(btn)) continue;
+			const nearby = findNearbyCommandText(btn);
+			if (isCommandBanned(nearby)) {
+				if (scope._abUpdateStats) scope._abUpdateStats({ blocked: 1 });
+				continue;
+			}
+			btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+			if (scope._abUpdateStats) scope._abUpdateStats({ clicks: 1 });
+			await new Promise(r => setTimeout(r, 100));
+		}
+	}
 	async function performAutoAccept(panelEl) {
 		if (!currentSettings.autoAcceptEnabled) return;
 		// 非无限模式下，剩余次数为0则停止
@@ -1051,19 +1202,35 @@
 			if (!currentSettings.autoAcceptUnlimited && currentSettings.autoAcceptRemaining <= 0) break;
 			if (!isAutoAcceptButton(btn)) continue;
 			const text = (btn.textContent || '').trim().toLowerCase();
+			if (text === 'accept all' && !isDiffConfirmationArea(btn)) continue;
+			if (text === 'allow this conversation' || text === 'always allow') continue;
 			if (/run|execute/i.test(text)) { const nearby = findNearbyCommandText(btn); if (isCommandBanned(nearby)) { if (scope._abUpdateStats) scope._abUpdateStats({ blocked: 1 }); continue; } }
 			btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 			if (scope._abUpdateStats) scope._abUpdateStats({ clicks: 1 });
 			await new Promise(r => setTimeout(r, 100));
 		}
+		if (currentSettings.autoAcceptPatterns['accept all'] && (currentSettings.autoAcceptUnlimited || currentSettings.autoAcceptRemaining > 0)) {
+			const acceptAllTarget = findDiffAcceptAllTarget(scope);
+			if (acceptAllTarget) {
+				acceptAllTarget.click();
+				if (scope._abUpdateStats) scope._abUpdateStats({ clicks: 1 });
+				await new Promise(r => setTimeout(r, 100));
+			}
+		}
+		await performScopedCommandAutoAccept(scope);
+		await performScopedPermissionAutoAccept(scope);
 	}
 	function applyAutoAcceptSettings(panelEl) {
 		if (autoAcceptObserver) { autoAcceptObserver.disconnect(); autoAcceptObserver = null; }
+		if (autoAcceptPermissionTimer) { clearInterval(autoAcceptPermissionTimer); autoAcceptPermissionTimer = null; }
+		if (autoAcceptCommandTimer) { clearInterval(autoAcceptCommandTimer); autoAcceptCommandTimer = null; }
 		if (!currentSettings.autoAcceptEnabled) return;
 		const scope = panelEl || document.querySelector('.antigravity-agent-side-panel');
 		if (!scope) return;
 		autoAcceptObserver = new MutationObserver(() => { clearTimeout(window._abAATimer); window._abAATimer = setTimeout(() => performAutoAccept(panelEl), 500); });
-		autoAcceptObserver.observe(scope, { childList: true, subtree: true });
+		autoAcceptObserver.observe(scope, { childList: true, subtree: true, attributes: true, characterData: true });
+		autoAcceptPermissionTimer = setInterval(() => { performScopedPermissionAutoAccept(scope).catch(() => {}); }, 1000);
+		autoAcceptCommandTimer = setInterval(() => { performScopedCommandAutoAccept(scope).catch(() => {}); }, 1000);
 		performAutoAccept(panelEl);
 	}
 
@@ -1382,6 +1549,7 @@
 	function onPanelReady(panelEl) {
 		console.log('[AB] ✅ AI 面板已检测到');
 		createSettingsUI(panelEl);
+		applyColorSettings(); applyFontsizeSettings(); applyFontfamilySettings();
 		applyCopySettings(panelEl); applyHotkeySettings();
 		applyAutoAcceptSettings(panelEl);
 		if (currentSettings.latexEnabled) applyLatexSettings(panelEl);
