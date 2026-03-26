@@ -83,7 +83,7 @@
 	<link rel="stylesheet" href="../../../workbench/workbench.desktop.main.css">
 
 	<style>
-		/* ===== Antigravity Better v0.2.6 ===== */
+		/* ===== Antigravity Better v0.2.7 ===== */
 		:root {
 			--color-user-message: #60A5FA;
 			--color-ai-response: #E0E0E0;
@@ -404,8 +404,8 @@
 <script>
 (function () {
 	'use strict';
-	/* ===== Antigravity Better v0.2.6 ===== */
-	console.log('[AB] Antigravity Better v0.2.6 Loading...');
+	/* ===== Antigravity Better v0.2.7 ===== */
+	console.log('[AB] Antigravity Better v0.2.7 Loading...');
 
 	// ===== Trusted Types Policy =====
 	let abPolicy = null;
@@ -436,6 +436,7 @@
 		math: 'M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M13.12,14.39L12,16l-2-3l-2.02,3H6l3.05-4.5L6.08,7h1.9l1.96,2.94L11.88,7h1.9l-2.94,4.5L13.91,15L13.12,14.39z M17,14h-2v2h-1v-2h-2v-1h2v-2h1v2h2V14z',
 		enter: 'M19,7v4H5.83l3.58-3.59L8,6l-6,6l6,6l1.41-1.41L5.83,13H21V7H19z',
 		counter: 'M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M17,13h-4v4h-2v-4H7v-2h4V7h2v4h4V13z',
+		toolbox: 'M20.71,7.04c-0.34-0.34-0.85-0.56-1.36-0.56h-2.67l-0.55-1.1C15.72,4.53,14.85,4,13.9,4h-3.8C9.15,4,8.28,4.53,7.87,5.38L7.32,6.48H4.65c-0.51,0-1.02,0.22-1.36,0.56C2.95,7.38,2.73,7.89,2.73,8.4v9.12c0,0.51,0.22,1.02,0.56,1.36c0.34,0.34,0.85,0.56,1.36,0.56h14.7c0.51,0,1.02-0.22,1.36-0.56c0.34-0.34,0.56-0.85,0.56-1.36V8.4C21.27,7.89,21.05,7.38,20.71,7.04z M12,17c-2.76,0-5-2.24-5-5s2.24-5,5-5s5,2.24,5,5S14.76,17,12,17z M12,9c-1.66,0-3,1.34-3,3s1.34,3,3,3s3-1.34,3-3S13.66,9,12,9z',
 	};
 	function createSvgIcon(id, extraClass) {
 		const svgNS = 'http://www.w3.org/2000/svg';
@@ -468,7 +469,8 @@
 			version_title: '版本更新', lbl_auto_update: '启动时自动检测', lbl_manual_update: '手动检测更新', btn_check_update: '立即检测',
 			update_checking: '正在检测...', update_latest: '✓ 已是最新版本', update_found: '✓ 发现新版本', update_failed: '✗ 检测失败',
 			update_available: '新版本可用', btn_download: '下载更新',
-			latex_title: 'LaTeX 公式', enable_latex: '启用 LaTeX 渲染', latex_desc: '自动渲染 AI 回复中的 LaTeX 数学公式'
+			latex_title: 'LaTeX 公式', enable_latex: '启用 LaTeX 渲染', latex_desc: '自动渲染 AI 回复中的 LaTeX 数学公式',
+			sys_tools_title: '系统工具', lbl_dismiss_corrupt: '自动关闭安装损坏提示'
 		},
 		en: {
 			tab_appearance: 'Appearance', tab_features: 'Features', tab_system: 'System',
@@ -487,13 +489,14 @@
 			version_title: 'Version Update', lbl_auto_update: 'Auto check on startup', lbl_manual_update: 'Manual check', btn_check_update: 'Check Now',
 			update_checking: 'Checking...', update_latest: '✓ Already latest', update_found: '✓ New version found', update_failed: '✗ Check failed',
 			update_available: 'New version available', btn_download: 'Download',
-			latex_title: 'LaTeX Formulas', enable_latex: 'Enable LaTeX Rendering', latex_desc: 'Auto-render LaTeX math formulas in AI responses'
+			latex_title: 'LaTeX Formulas', enable_latex: 'Enable LaTeX Rendering', latex_desc: 'Auto-render LaTeX math formulas in AI responses',
+			sys_tools_title: 'System Tools', lbl_dismiss_corrupt: 'Auto-dismiss corrupt warning'
 		}
 	};
 	function t(key) { return (T[currentSettings.lang] || T.zh)[key] || key; }
 
 	// ===== 配置 =====
-	const APP_VERSION = '0.2.6';
+	const APP_VERSION = '0.2.7';
 	const STORAGE_KEY = 'antigravity-better-settings';
 
 	const COLOR_CONFIGS = [
@@ -566,7 +569,7 @@
 		autoAcceptStats: { clicks: 0, blocked: 0, verified: 0 },
 		fontfamilyMasterEnabled: false,
 		fontfamilies: FONTFAMILY_CONFIGS.reduce((acc, c) => { acc[c.id] = { family: c.default, enabled: c.enabled }; return acc; }, {}),
-		autoUpdateEnabled: true, latexEnabled: false,
+		autoUpdateEnabled: true, latexEnabled: false, dismissCorruptEnabled: true,
 	};
 
 	// ===== 存储 =====
@@ -951,13 +954,30 @@
 		const updateStatusEl = el('div', 'ab-save-status');
 		const checkBtn = el('button', 'ab-btn secondary', t('btn_check_update')); checkBtn.dataset.i18n = 'btn_check_update';
 		checkBtn.style.cssText = 'flex:none; padding:4px 10px; font-size:11px;';
+		const downloadLink = document.createElement('a'); downloadLink.className = 'ab-btn secondary';
+		downloadLink.href = GITHUB_RELEASES; downloadLink.target = '_blank';
+		downloadLink.style.cssText = 'flex:none; padding:4px 10px; font-size:11px; text-decoration:none; display:none; text-align:center;';
+		downloadLink.textContent = t('btn_download'); downloadLink.dataset.i18n = 'btn_download';
 		checkBtn.addEventListener('click', async () => {
-			updateStatusEl.textContent = t('update_checking'); checkBtn.disabled = true;
+			updateStatusEl.textContent = t('update_checking'); checkBtn.disabled = true; downloadLink.style.display = 'none';
 			const result = await checkForUpdate();
-			updateStatusEl.textContent = result === 'found' ? t('update_found') : result === 'latest' ? t('update_latest') : t('update_failed');
-			checkBtn.disabled = false; setTimeout(() => updateStatusEl.textContent = '', 3000);
+			if (result.status === 'found') {
+				updateStatusEl.textContent = 'v' + APP_VERSION + ' → v' + result.remoteVersion;
+				downloadLink.style.display = 'inline-block';
+			} else {
+				updateStatusEl.textContent = result.status === 'latest' ? t('update_latest') : t('update_failed');
+				setTimeout(() => updateStatusEl.textContent = '', 3000);
+			}
+			checkBtn.disabled = false;
 		});
-		manualRight.appendChild(checkBtn);
+		manualRight.appendChild(checkBtn); manualRight.appendChild(downloadLink);
+		// -- 系统工具 --
+		const toolsAcc = createAccordion('sys_tools_title', false, 'toolbox');
+		const { row: corruptRow, right: corruptRight } = createSettingItem('shield', 'lbl_dismiss_corrupt');
+		corruptRight.appendChild(createToggle(currentSettings.dismissCorruptEnabled, (v) => { currentSettings.dismissCorruptEnabled = v; saveSettings(currentSettings); }));
+		toolsAcc.inner.appendChild(corruptRow);
+		tabSystem.appendChild(toolsAcc.item);
+		// -- 版本更新 --
 		verAcc.inner.appendChild(manualRow); verAcc.inner.appendChild(updateStatusEl);
 		tabSystem.appendChild(verAcc.item);
 
@@ -1555,7 +1575,9 @@
 	}
 
 	// ===== 版本检测 =====
-	const VERSION_API = 'https://hub.lib00.com/api/v1/antigravity-better/version';
+	const GITHUB_API = 'https://api.github.com/repos/016/Antigravity-Better/releases/latest';
+	const GITHUB_RELEASES = 'https://github.com/016/Antigravity-Better/releases';
+	const FALLBACK_API = 'https://hub.lib00.com/api/v1/antigravity-better/version';
 	function isNewerVersion(remote, local) {
 		const r = remote.replace(/^v/i, '').split('.').map(Number);
 		const l = local.replace(/^v/i, '').split('.').map(Number);
@@ -1563,12 +1585,24 @@
 		return false;
 	}
 	async function checkForUpdate() {
+		// 优先使用 GitHub API
 		try {
-			const resp = await fetch(VERSION_API, { cache: 'no-store' }); if (!resp.ok) return 'error';
+			const resp = await fetch(GITHUB_API, { cache: 'no-store' });
+			if (resp.ok) {
+				const json = await resp.json();
+				const ver = (json.tag_name || '').replace(/^v/i, '');
+				if (ver && isNewerVersion(ver, APP_VERSION)) return { status: 'found', remoteVersion: ver };
+				return { status: 'latest' };
+			}
+		} catch (e) { /* GitHub API 失败，尝试备用 */ }
+		// 备用 API
+		try {
+			const resp = await fetch(FALLBACK_API, { cache: 'no-store' }); if (!resp.ok) return { status: 'error' };
 			const json = await resp.json(); const data = json.data || json;
-			if (data.version && isNewerVersion(data.version, APP_VERSION)) return 'found';
-			return 'latest';
-		} catch (e) { return 'error'; }
+			const ver = (data.version || '').replace(/^v/i, '');
+			if (ver && isNewerVersion(ver, APP_VERSION)) return { status: 'found', remoteVersion: ver };
+			return { status: 'latest' };
+		} catch (e) { return { status: 'error' }; }
 	}
 
 	// ===== 生命周期 =====
@@ -1588,9 +1622,30 @@
 		obs.observe(document.body, { childList: true, subtree: true });
 		console.log('[AB] ⏳ 等待 AI 面板出现...');
 	}
+	// ===== 自动关闭"安装损坏"通知 =====
+	function dismissCorruptWarning() {
+		if (!currentSettings.dismissCorruptEnabled) return;
+		const keywords = ['损坏', '重新安装', 'corrupt', 'reinstall'];
+		function tryDismiss() {
+			document.querySelectorAll('.notification-toast, .notifications-toasts .notification-list-item').forEach(toast => {
+				const text = (toast.textContent || '').toLowerCase();
+				if (keywords.some(k => text.includes(k))) {
+					const closeBtn = toast.querySelector('.codicon-notifications-clear, .codicon-close, .action-label[title*="Close"], .action-label[title*="关闭"], .clear-notification-action');
+					if (closeBtn) { closeBtn.click(); console.log('[AB] ✅ 已自动关闭安装损坏通知'); }
+					else { toast.style.display = 'none'; console.log('[AB] ✅ 已隐藏安装损坏通知'); }
+				}
+			});
+		}
+		// 通知可能延迟出现，持续监听 30 秒
+		const obs = new MutationObserver(() => tryDismiss());
+		obs.observe(document.body, { childList: true, subtree: true });
+		setTimeout(() => obs.disconnect(), 30000);
+		setTimeout(tryDismiss, 2000);
+	}
+
 	function init() {
 		console.log('[AB] 开始初始化...');
-		try { applyColorSettings(); applyFontsizeSettings(); applyFontfamilySettings(); waitForAgentPanel(); console.log('[AB] ✅ 初始化完成'); } catch (e) { console.error('[AB] ❌ 初始化失败:', e); }
+		try { applyColorSettings(); applyFontsizeSettings(); applyFontfamilySettings(); waitForAgentPanel(); dismissCorruptWarning(); console.log('[AB] ✅ 初始化完成'); } catch (e) { console.error('[AB] ❌ 初始化失败:', e); }
 	}
 	if (document.body) { setTimeout(init, 1000); } else { document.addEventListener('DOMContentLoaded', () => setTimeout(init, 1000)); }
 })();

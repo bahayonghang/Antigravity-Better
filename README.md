@@ -8,7 +8,7 @@
     <a href="./README_ZH.md">中文</a>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/version-0.2.6-brightgreen" alt="Version">
+    <img src="https://img.shields.io/badge/version-0.2.7-brightgreen" alt="Version">
     <img src="https://img.shields.io/badge/dependencies-zero-green" alt="Zero Dependencies">
     <img src="https://img.shields.io/badge/file-single%20HTML-blue" alt="Single File">
     <img src="https://img.shields.io/badge/target-Antigravity-purple" alt="Antigravity">
