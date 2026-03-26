@@ -326,8 +326,8 @@
 			min-height:14px !important;
 			margin:0 !important;
 			padding:0 !important;
-			border:1.5px solid #b794f6 !important;
-			border-radius:2px !important;
+			border:1.5px solid #ef4444 !important; /* 红色（未完成） */
+			border-radius:50% !important; /* 圆圈 */
 			background:transparent !important;
 			box-shadow:none !important;
 			outline:none !important;
@@ -341,16 +341,15 @@
 		}
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > button *,
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > [role="checkbox"] * {
-			color:transparent !important;
-			font-size:0 !important;
-			line-height:0 !important;
+			display:none !important; /* 彻底隐藏内部节点，消除 check 字样残留 */
 		}
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > input[type="checkbox"]:checked,
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > button[aria-checked="true"],
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > button[data-state="checked"],
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > [role="checkbox"][aria-checked="true"],
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > [role="checkbox"][data-state="checked"] {
-			background:#b794f6 !important;
+			background:#9ca3af !important; /* 灰色背景（已完成） */
+			border-color:#9ca3af !important; /* 灰色边框（已完成） */
 		}
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > p,
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > span,
