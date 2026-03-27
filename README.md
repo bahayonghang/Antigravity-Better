@@ -8,7 +8,7 @@
     <a href="./README_ZH.md">中文</a>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/version-0.2.7-brightgreen" alt="Version">
+    <img src="https://img.shields.io/badge/version-0.2.8-brightgreen" alt="Version">
     <img src="https://img.shields.io/badge/dependencies-zero-green" alt="Zero Dependencies">
     <img src="https://img.shields.io/badge/file-single%20HTML-blue" alt="Single File">
     <img src="https://img.shields.io/badge/target-Antigravity-purple" alt="Antigravity">
@@ -50,22 +50,23 @@ You can freely customize this HTML file to build your own features. Following ou
 
 ## 🚀 Features
 
-### Built-in Customizations
+### Release Timeline (Partial)
 
-| Feature | Version | Description |
-|---------|---------|-------------|
-| 🏗️ **Architecture Upgrade** | 0.2.1 | Full migration to IDE v1.18.3+ `workbench.html` architecture with feature parity for v0.1.7 |
-| 🎨 **Custom Colors** | 0.1.1 | Change text colors for user messages, AI responses, code blocks, thinking process, and more |
-| 🔤 **Font Size Control** | 0.1.4 | Customize font sizes for different content types with sync-all option |
-| 🔠 **Font Family** | 0.1.7 | Customize font family for user messages, AI responses, code blocks, thinking process, etc. |
-| 📋 **Copy Buttons** | 0.2.2 | One-click copy for any message type (user, AI, thinking). 0.2.2: Fixed button display misplacement issue |
-| ⌨️ **Hotkey Override** | 0.1.1 | Change the send shortcut (Enter → Cmd+Enter, Ctrl+Enter, etc.) |
-| 🔄 **Auto Retry** | 0.1.2 | Automatically click the Retry button when AI agent errors occur (configurable count & delay) v0.1.6 Merged into Auto Accept  |
-| 🤖 **Auto Accept** | 0.2.2 | Auto-click Accept/Run/Apply/Execute/Confirm/Allow buttons with configurable patterns. 0.2.2: Fixed auto-click bug, added max click limit setting with alert and clear function |
-| 🛡️ **Safety Rules** | 0.1.3 | Block dangerous commands from auto-execution with customizable blacklist |
-| 📐 **LaTeX Rendering** | 0.1.5 | Auto-render LaTeX math formulas ($...$, $$...$$) in AI responses using KaTeX |
-| 🔔 **Version Check** | 0.1.4 | Auto/manual check for updates with in-app notification |
-| 🌐 **i18n Ready** | 0.1.1 | Built-in English/Chinese support, easily extendable to other languages |
+- **v0.2.8**: Fixes the app version string that was still shown as `0.2.2`, and aligns documentation version info.
+- **v0.2.7**: Enhances update checks with dual-source fallback (GitHub API + backup API), shows current/remote version comparison, adds a download entry, and introduces an auto-dismiss system tool for corrupted-install warnings.
+- **v0.2.6**: Adds auto-accept rules for diff confirmations and permission prompts, with safer handling for `accept all`, `always allow`, and `allow this conversation`.
+- **v0.2.5**: Improves workbench UI, replaces emoji icons with inline SVG, and refines tab alignment, floating settings button, update-check button style, and close-button hit area.
+- **v0.2.4**: Fixes LaTeX inline formula rendering issue (#23).
+- **v0.2.3**: Adds a deployment tool for `workbench.html`.
+- **v0.2.2**: Fixes copy button misalignment and auto-accept click issues, and adds max-click limit with reset.
+- **v0.2.1**: Migrates to IDE v1.18.3+ `workbench.html` architecture with v0.1.7 feature parity.
+- **v0.1.7**: Stable legacy-architecture release (`cascade-panel.html`).
+- **v0.1.6**: Merges auto-retry capability into auto-accept.
+- **v0.1.5**: Adds LaTeX formula rendering.
+- **v0.1.4**: Adds font-size control and version check.
+- **v0.1.3**: Adds safety rules to block dangerous auto-executed commands.
+- **v0.1.2**: Adds auto-retry mechanism.
+- **v0.1.1**: First core feature set: custom colors, hotkey override, and i18n support.
 
 ### For Developers
 
