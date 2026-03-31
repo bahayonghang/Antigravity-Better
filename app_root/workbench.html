@@ -301,6 +301,12 @@
 		body.fontfamily-thinking .antigravity-agent-side-panel .leading-relaxed.select-text.opacity-70,
 		body.fontfamily-thinking .antigravity-agent-side-panel .leading-relaxed.select-text.opacity-70 * { font-family:var(--fontfamily-thinking) !important; }
 
+		/* ===== 图标字体保护（防止字体族覆盖破坏图标显示） ===== */
+		.antigravity-agent-side-panel .google-symbols,
+		.antigravity-agent-side-panel [class*="google-symbols"] { font-family:'Google Symbols' !important; }
+		.antigravity-agent-side-panel .codicon,
+		.antigravity-agent-side-panel [class*="codicon-"] { font-family:'codicon' !important; }
+
 		/* ===== 任务列表修复 ===== */
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) ul.contains-task-list,
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) ol.contains-task-list {
@@ -340,8 +346,10 @@
 			transform:translateY(0.2em);
 		}
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > button *,
-		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > [role="checkbox"] * {
-			display:none !important; /* 彻底隐藏内部节点，消除 check 字样残留 */
+		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > [role="checkbox"] *,
+		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > .google-symbols,
+		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item .google-symbols {
+			display:none !important; /* 彻底隐藏内部节点，消除 check/图标 字样残留 */
 		}
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > input[type="checkbox"]:checked,
 		.antigravity-agent-side-panel .leading-relaxed.select-text:not(.opacity-70) li.task-list-item > button[aria-checked="true"],
