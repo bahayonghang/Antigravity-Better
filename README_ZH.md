@@ -8,7 +8,7 @@
     <strong>中文</strong>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/version-0.2.8-brightgreen" alt="Version">
+    <img src="https://img.shields.io/badge/version-0.2.10-brightgreen" alt="Version">
     <img src="https://img.shields.io/badge/dependencies-zero-green" alt="Zero Dependencies">
     <img src="https://img.shields.io/badge/file-single%20HTML-blue" alt="Single File">
     <img src="https://img.shields.io/badge/target-Antigravity-purple" alt="Antigravity">
@@ -52,6 +52,8 @@
 
 ### 版本发布列表（不完全）
 
+- **v0.2.10**：修复对话中 Undo 图标未正确渲染的问题，原因是 CSP 未放行所需的 Google 相关资源；本次通过补充相关策略完成修复，方案来自 hanliangwei。
+- **v0.2.9**：修复新建对话时误点历史会话标题的问题；当按钮同时带有 `title` 且包含 `grow` 类名时，跳过自动点击。
 - **v0.2.8**：修复程序内版本号仍显示为 `0.2.2` 的问题，并同步整理文档版本信息。
 - **v0.2.7**：增强更新检测（GitHub API + 备用 API 回退），支持显示当前/远端版本对比，新增“下载更新”入口和系统工具“自动关闭安装损坏提示”。
 - **v0.2.6**：为 diff 确认与权限提示增加自动接受规则，更安全处理 `accept all`、`always allow`、`allow this conversation` 操作。

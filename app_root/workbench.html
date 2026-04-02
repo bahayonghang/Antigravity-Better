@@ -37,6 +37,7 @@
 				style-src
 					'self'
 					'unsafe-inline'
+					https://fonts.googleapis.com
 				;
 				connect-src
 					'self'
@@ -52,6 +53,7 @@
 					vscode-remote-resource:
 					vscode-managed-remote-resource:
 					https://*.vscode-unpkg.net
+					https://fonts.gstatic.com
 				;
 				require-trusted-types-for
 					'script'
@@ -76,6 +78,7 @@
 					richScreenReaderContent
 					renderCodeBlock
 					antigravityBetter
+					google#safe
 				;
 		" />
 
@@ -83,7 +86,7 @@
 	<link rel="stylesheet" href="../../../workbench/workbench.desktop.main.css">
 
 	<style>
-		/* ===== Antigravity Better v0.2.8 ===== */
+		/* ===== Antigravity Better v0.2.10 ===== */
 		:root {
 			--color-user-message: #60A5FA;
 			--color-ai-response: #E0E0E0;
@@ -411,8 +414,8 @@
 <script>
 (function () {
 	'use strict';
-	/* ===== Antigravity Better v0.2.8 ===== */
-	console.log('[AB] Antigravity Better v0.2.8 Loading...');
+	/* ===== Antigravity Better v0.2.10 ===== */
+	console.log('[AB] Antigravity Better v0.2.10 Loading...');
 
 	// ===== Trusted Types Policy =====
 	let abPolicy = null;
@@ -503,7 +506,7 @@
 	function t(key) { return (T[currentSettings.lang] || T.zh)[key] || key; }
 
 	// ===== 配置 =====
-	const APP_VERSION = '0.2.8';
+	const APP_VERSION = '0.2.10';
 	const STORAGE_KEY = 'antigravity-better-settings';
 
 	const COLOR_CONFIGS = [
@@ -1133,6 +1136,8 @@
 		if (!text || text.length > 50) return false;
 		// 排除下拉菜单触发器（如 "Always run" 按钮）
 		if (btn.hasAttribute('aria-haspopup')) return false;
+		// 排除列表项/建议按钮（带 title 且含 grow 的全宽按钮）
+		if (btn.title && btn.classList.contains('grow')) return false;
 		const patterns = Object.entries(currentSettings.autoAcceptPatterns).filter(([_, v]) => v).map(([k]) => k);
 		if (!patterns.length) return false;
 		const rejects = ['skip', 'reject', 'cancel', 'close', 'refine', 'dismiss', 'always'];

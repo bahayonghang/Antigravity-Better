@@ -8,7 +8,7 @@
     <a href="./README_ZH.md">中文</a>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/version-0.2.8-brightgreen" alt="Version">
+    <img src="https://img.shields.io/badge/version-0.2.10-brightgreen" alt="Version">
     <img src="https://img.shields.io/badge/dependencies-zero-green" alt="Zero Dependencies">
     <img src="https://img.shields.io/badge/file-single%20HTML-blue" alt="Single File">
     <img src="https://img.shields.io/badge/target-Antigravity-purple" alt="Antigravity">
@@ -52,6 +52,8 @@ You can freely customize this HTML file to build your own features. Following ou
 
 ### Release Timeline (Partial)
 
+- **v0.2.10**: Fixes the Undo icon rendering issue in conversations by allowing the required Google resources in the Content Security Policy. The fix proposal came from hanliangwei.
+- **v0.2.9**: Fixes accidental auto-clicks on conversation titles when creating a new conversation by skipping title buttons that carry both `title` and `grow`.
 - **v0.2.8**: Fixes the app version string that was still shown as `0.2.2`, and aligns documentation version info.
 - **v0.2.7**: Enhances update checks with dual-source fallback (GitHub API + backup API), shows current/remote version comparison, adds a download entry, and introduces an auto-dismiss system tool for corrupted-install warnings.
 - **v0.2.6**: Adds auto-accept rules for diff confirmations and permission prompts, with safer handling for `accept all`, `always allow`, and `allow this conversation`.
